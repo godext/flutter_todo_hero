@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "629013756806",
+    "project_id": "todo-hero-afa21",
+    "storage_bucket": "todo-hero-afa21.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:629013756806:android:2eb7703aede4a18b720a07",
+        "android_client_info": {
+          "package_name": "com.example.todo_hero"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "629013756806-e0tnipvl0eob29pk8dd7ff815c6qshoj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEKN_hLugBIL-iiWLs-sWHhyellYeAP5c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "629013756806-e0tnipvl0eob29pk8dd7ff815c6qshoj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
