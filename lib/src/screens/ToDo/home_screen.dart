@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_hero/src/logic/bloc/app_bloc.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -44,10 +46,11 @@ class TodoList extends StatelessWidget {
               color: CupertinoColors.white,
             )),
         backgroundColor: CupertinoColors.systemBlue,
-        trailing: TextButton.icon(
-          onPressed: () {},
+        trailing: IconButton(
+          onPressed: () {
+            context.read<AppBloc>().add(const AppLogoutRequested());
+          },
           icon: const Icon(CupertinoIcons.square_arrow_left),
-          label: const Text('Logout'),
         ),
       ),
       child: SafeArea(
@@ -64,11 +67,13 @@ class TodoList extends StatelessWidget {
                   return Card(
                     color: CupertinoColors.darkBackgroundGray,
                     child: ListTile(
-                      leading: Icon(CupertinoIcons.check_mark_circled_solid,
-                          size: 35, color: CupertinoColors.systemBlue),
+                      leading: const Icon(
+                          CupertinoIcons.check_mark_circled_solid,
+                          size: 35,
+                          color: CupertinoColors.systemBlue),
                       title: Text(
                         todos[index],
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 20, color: CupertinoColors.white),
                       ),
                     ),

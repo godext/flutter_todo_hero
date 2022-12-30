@@ -12,6 +12,7 @@ class Todo extends Equatable {
   final int? importancy;
   final int? difficulty;
   final int? benefital;
+  final bool? isCompleted;
 
   const Todo({
     required this.title,
@@ -23,6 +24,7 @@ class Todo extends Equatable {
     this.importancy,
     this.difficulty,
     this.benefital,
+    this.isCompleted,
   });
 
   static const empty = Todo(
@@ -43,8 +45,23 @@ class Todo extends Equatable {
       "TimeComplexity": todo.timeComplexity,
       "Importancy": todo.importancy,
       "Difficulty": todo.difficulty,
-      "Benefital": todo.benefital
+      "Benefital": todo.benefital,
+      "isCompleted": todo.isCompleted,
     };
+  }
+
+  Todo fromJson(Map<String, dynamic> json) {
+    return Todo(
+      id: json['ID'],
+      userId: json['UserID'],
+      title: json['title'],
+      description: json['description'],
+      timeComplexity: json['TimeComplexity'],
+      importancy: json['Importancy'],
+      difficulty: json['Difficulty'],
+      benefital: json['Benefital'],
+      isCompleted: json['isCompleted'],
+    );
   }
 
   Todo copyWith({
@@ -57,6 +74,7 @@ class Todo extends Equatable {
     int? importancy,
     int? difficulty,
     int? benefital,
+    bool? isCompleted,
   }) {
     return Todo(
       title: title ?? this.title,
@@ -68,6 +86,7 @@ class Todo extends Equatable {
       importancy: importancy ?? this.importancy,
       difficulty: difficulty ?? this.difficulty,
       benefital: benefital ?? this.benefital,
+      isCompleted: isCompleted ?? this.isCompleted,
     );
   }
 
