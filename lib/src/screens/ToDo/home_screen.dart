@@ -38,9 +38,17 @@ class TodoList extends StatelessWidget {
     return CupertinoPageScaffold(
       backgroundColor: CupertinoColors.darkBackgroundGray,
       navigationBar: CupertinoNavigationBar(
-        middle: Text('To-Do',
-            style: TextStyle(fontSize: 28, color: CupertinoColors.white)),
+        middle: const Text('To-Do',
+            style: TextStyle(
+              fontSize: 28,
+              color: CupertinoColors.white,
+            )),
         backgroundColor: CupertinoColors.systemBlue,
+        trailing: TextButton.icon(
+          onPressed: () {},
+          icon: const Icon(CupertinoIcons.square_arrow_left),
+          label: const Text('Logout'),
+        ),
       ),
       child: SafeArea(
         child: Column(

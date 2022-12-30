@@ -1,23 +1,7 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:todo_hero/src/models/model.dart';
-
-class FirestoreCRUDTodoException implements Exception {
-  const FirestoreCRUDTodoException([
-    this.message = 'An unknown exception occurred.',
-  ]);
-
-  factory FirestoreCRUDTodoException.fromCode(String code) {
-    switch (code) {
-      case 'todo-empty':
-        return const FirestoreCRUDTodoException('The todo is empty.');
-      default:
-        return const FirestoreCRUDTodoException();
-    }
-  }
-
-  final String message;
-}
+import 'package:todo_hero/src/util/exceptions/custom_exceptions.dart';
 
 class FirestoreTodoRepository {
   late AuthenticationRepository _authenticationRepository;
@@ -37,9 +21,12 @@ class FirestoreTodoRepository {
   final db = FirebaseFirestore.instance.collection('todo');
 
   Future<void> addTodo(Todo todo) async {
+    //error-handle
     if (todo.isEmpty) {
-      throw FirestoreCRUDTodoException.fromCode('todo-empty');
+      throw FirestoreTodoException.fromCode('todo-empty');
     }
+
+    String? currentUserId = _authenticationRepository.currentUser.id;
 
     var docRef = db.doc();
     String? userID;

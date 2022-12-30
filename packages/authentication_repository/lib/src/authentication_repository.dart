@@ -258,6 +258,22 @@ class AuthenticationRepository {
     }
   }
 
+  Future<firebase_auth.UserCredential?> logInAnonymously() async {
+    try {
+      final userCredential = await _firebaseAuth.signInAnonymously();
+      return userCredential;
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "operation-not-allowed":
+          print("Anonymous auth hasn't been enabled for this project.");
+          return null;
+        default:
+          print("Unknown Authenticaion error.");
+          return null;
+      }
+    }
+  }
+
   /// Signs out the current user which will emit
   /// [User.empty] from the [user] Stream.
   ///
