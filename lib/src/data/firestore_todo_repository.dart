@@ -97,7 +97,6 @@ class FirestoreTodoRepository {
       timeComplexity: json['TimeComplexity'],
       importancy: json['Importancy'],
       difficulty: json['Difficulty'],
-      benefital: json['Benefital'],
       isCompleted: json['isCompleted'],
     );
   }

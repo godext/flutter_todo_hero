@@ -85,8 +85,14 @@ class TodoList extends StatelessWidget {
               padding: EdgeInsets.all(10),
               child: CupertinoButton(
                 child: Text('Add Todo',
-                    style: TextStyle(color: CupertinoColors.white)),
+                    style: TextStyle(
+                      color: CupertinoColors.white,
+                    )),
                 onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    'edit-todo',
+                  );
                   // code to add a new todo item
                 },
                 color: CupertinoColors.systemBlue.withOpacity(0.7),

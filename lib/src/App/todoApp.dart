@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_hero/src/logic/bloc/app_bloc.dart';
 import 'package:todo_hero/src/screens/ToDo/home_screen.dart';
+import 'package:todo_hero/src/screens/screens.dart';
 import 'package:todo_hero/src/util/routes.dart';
 
 class ToDoApp extends StatelessWidget {
@@ -36,10 +37,14 @@ class ToDoAppView extends StatelessWidget {
     print('Bin jetzt in der ToDoAppView');
 
     return MaterialApp(
-        title: 'To-Do-Hero',
-        home: FlowBuilder<AppStatus>(
-          state: context.select((AppBloc bloc) => bloc.state.status),
-          onGeneratePages: onGenerateAppViewPages,
-        ));
+      title: 'To-Do-Hero',
+      home: FlowBuilder<AppStatus>(
+        state: context.select((AppBloc bloc) => bloc.state.status),
+        onGeneratePages: onGenerateAppViewPages,
+      ),
+      routes: {
+        'edit-todo': (context) => const TodoEditPage(),
+      },
+    );
   }
 }

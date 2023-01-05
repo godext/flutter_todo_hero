@@ -101,5 +101,21 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
           difficulty: state.difficulty,
           beneficial: state.beneficial,
         ));
+
+    try {
+      if (state.initialTodo == null) {
+        print('Erstelle eine neue Todo');
+        await _firestoreTodoRepository.createTodo(todo);
+      } else {
+        print('Update eine bereits existierende todo');
+        await _firestoreTodoRepository.updateTodo(todo);
+      }
+
+      print('Ist erfolgreich updated/erstellt worden');
+      emit(state.copyWith(status: TodoStatus.success));
+    } catch (e) {
+      print(e.toString());
+      emit(state.copyWith(status: TodoStatus.failure));
+    }
   }
 }
