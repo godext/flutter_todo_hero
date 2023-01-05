@@ -93,8 +93,7 @@ class FirestoreTodoRepository {
     return Todo(
       id: json['ID'],
       userId: json['UserID'],
-      title: json['title'],
-      description: json['description'],
+      content: json['description'],
       timeComplexity: json['TimeComplexity'],
       importancy: json['Importancy'],
       difficulty: json['Difficulty'],
