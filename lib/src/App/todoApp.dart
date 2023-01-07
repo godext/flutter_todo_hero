@@ -3,15 +3,19 @@ import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_hero/src/logic/bloc/app_bloc.dart';
+import 'package:todo_hero/src/logic/bloc/todo_bloc.dart';
+import 'package:todo_hero/src/models/model.dart';
 import 'package:todo_hero/src/screens/ToDo/home_screen.dart';
 import 'package:todo_hero/src/screens/screens.dart';
 import 'package:todo_hero/src/util/routes.dart';
 
 class ToDoApp extends StatelessWidget {
-  const ToDoApp({
+  ToDoApp({
     super.key,
     required AuthenticationRepository authenticationRepository,
   }) : _authenticationRepository = authenticationRepository;
+
+  Todo initialTodo = const Todo(content: '');
 
   final AuthenticationRepository _authenticationRepository;
   // This widget is the root of your application.
@@ -23,7 +27,7 @@ class ToDoApp extends StatelessWidget {
         create: (_) => AppBloc(
           authenticationRepository: _authenticationRepository,
         ),
-        child: ToDoAppView(),
+        child: const ToDoAppView(),
       ),
     );
   }
@@ -42,9 +46,6 @@ class ToDoAppView extends StatelessWidget {
         state: context.select((AppBloc bloc) => bloc.state.status),
         onGeneratePages: onGenerateAppViewPages,
       ),
-      routes: {
-        'edit-todo': (context) => const TodoEditPage(),
-      },
     );
   }
 }

@@ -33,6 +33,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     on<TodoImportancyChanged>(_onTodoImportancyChanged);
     on<TodoDifficultyChanged>(_onTodoDifficultyChanged);
     on<TodoBeneficialChanged>(_onTodoBeneficialChanged);
+    on<TodoSubmitted>(_onTodoSubmitted);
   }
 
   void _onTodoContentChanged(
@@ -80,7 +81,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     );
   }
 
-  Future<void> _onSubmitted(
+  Future<void> _onTodoSubmitted(
     TodoSubmitted event,
     Emitter<TodoState> emit,
   ) async {

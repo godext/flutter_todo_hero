@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_hero/src/logic/bloc/app_bloc.dart';
+import 'package:todo_hero/src/logic/bloc/todo_bloc.dart';
+import 'package:todo_hero/src/screens/screens.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -89,9 +91,11 @@ class TodoList extends StatelessWidget {
                       color: CupertinoColors.white,
                     )),
                 onPressed: () {
-                  Navigator.pushNamed(
+                  Navigator.push(
                     context,
-                    'edit-todo',
+                    MaterialPageRoute(
+                      builder: (context) => const TodoEditPage(),
+                    ),
                   );
                   // code to add a new todo item
                 },
