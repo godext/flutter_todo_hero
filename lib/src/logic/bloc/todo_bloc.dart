@@ -88,14 +88,14 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     emit(state.copyWith(status: TodoStatus.loading));
     final todo = (state.initialTodo ??
         Todo(
-          content: '',
-          timeComplexity: 0,
-          importancy: 0,
-          difficulty: 0,
-          beneficial: 0,
-          userId: _authenticationRepository.currentUser.id,
-          id: const Uuid().toString(),
-        ).copyWith(
+                content: '',
+                timeComplexity: 0,
+                importancy: 0,
+                difficulty: 0,
+                beneficial: 0,
+                userId: _authenticationRepository.currentUser.id,
+                id: '')
+            .copyWith(
           content: state.content,
           timeComplexity: state.timeComplexity,
           importancy: state.importancy,

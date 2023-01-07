@@ -37,7 +37,7 @@ class Todo extends Equatable {
     return {
       "ID": todo.id,
       "UserID": todo.userId,
-      "Description": todo.content,
+      "Content": todo.content,
       "TimeComplexity": todo.timeComplexity,
       "Importancy": todo.importancy,
       "Difficulty": todo.difficulty,

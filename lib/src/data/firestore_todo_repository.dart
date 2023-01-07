@@ -2,6 +2,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:todo_hero/src/models/model.dart';
 import 'package:todo_hero/src/util/exceptions/custom_exceptions.dart';
+import 'package:uuid/uuid.dart';
 
 class FirestoreTodoRepository {
   late AuthenticationRepository _authenticationRepository;
@@ -28,7 +29,8 @@ class FirestoreTodoRepository {
     }
 
     try {
-      var docRef = db.doc();
+      final String todoID = const Uuid().v4();
+      //var docRef = db.doc();
       String? userID;
 
       if (todo.userId == null) {
@@ -36,15 +38,13 @@ class FirestoreTodoRepository {
       }
 
       todo = todo.copyWith(
-        id: docRef.id,
+        id: todoID,
         userId: userID,
       );
 
       // TODO: Hier ist noch das main problem
 
-      db.doc(docRef.id).update(todo.toJson(todo));
-
-      return docRef;
+      return db.add(todo.toJson(todo));
     } catch (e) {
       FirestoreTodoException.fromCode('exception-message', e);
       return null;

@@ -61,6 +61,7 @@ class _ContentInput extends StatelessWidget {
             children: [
               CupertinoTextField(
                 placeholder: 'What are you planning to do?',
+                key: const Key('todoForm_todoCreateOrEdit'),
                 onChanged: (value) {
                   context.read<TodoBloc>().add(
                         TodoContentChanged(value),
