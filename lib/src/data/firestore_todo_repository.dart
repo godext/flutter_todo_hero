@@ -42,8 +42,6 @@ class FirestoreTodoRepository {
         userId: userID,
       );
 
-      // TODO: Hier ist noch das main problem
-
       return db.add(todo.toJson(todo));
     } catch (e) {
       FirestoreTodoException.fromCode('exception-message', e);
