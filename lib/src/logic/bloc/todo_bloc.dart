@@ -96,6 +96,8 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
                 difficulty: 0,
                 beneficial: 0,
                 userId: _authenticationRepository.currentUser.id,
+                isCompleted: false,
+                dateDue: DateTime.now().toString(),
                 id: '')
             .copyWith(
           content: state.content,
@@ -103,6 +105,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
           importancy: state.importancy,
           difficulty: state.difficulty,
           beneficial: state.beneficial,
+          dateDue: state.dueDate,
         ));
 
     try {

@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_hero/src/Entities/entities.dart';
 
 @immutable
 class Todo extends Equatable {
   final String content;
-  final DateTime? dateDue;
+  final String? dateDue;
   final String? id;
   final String? userId;
   final int? timeComplexity;
@@ -43,6 +44,7 @@ class Todo extends Equatable {
       "Difficulty": todo.difficulty,
       "Beneficial": todo.beneficial,
       "isCompleted": todo.isCompleted,
+      "DateDue": todo.dateDue,
     };
   }
 
@@ -50,7 +52,7 @@ class Todo extends Equatable {
     String? content,
     String? userId,
     String? id,
-    DateTime? dateDue,
+    String? dateDue,
     int? timeComplexity,
     int? importancy,
     int? difficulty,
@@ -67,6 +69,20 @@ class Todo extends Equatable {
       difficulty: difficulty ?? this.difficulty,
       beneficial: beneficial ?? this.beneficial,
       isCompleted: isCompleted ?? this.isCompleted,
+    );
+  }
+
+  static Todo fromEntity(TodoEntity entity) {
+    return Todo(
+      content: entity.content,
+      dateDue: entity.dateDue,
+      id: entity.id,
+      userId: entity.userId,
+      timeComplexity: entity.timeComplexity,
+      importancy: entity.importancy,
+      difficulty: entity.difficulty,
+      beneficial: entity.beneficial,
+      isCompleted: entity.isCompleted,
     );
   }
 

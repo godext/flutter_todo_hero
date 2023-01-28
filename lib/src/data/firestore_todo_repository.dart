@@ -1,5 +1,6 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:todo_hero/src/Entities/entities.dart';
 import 'package:todo_hero/src/models/model.dart';
 import 'package:todo_hero/src/util/exceptions/custom_exceptions.dart';
 import 'package:uuid/uuid.dart';
@@ -51,12 +52,23 @@ class FirestoreTodoRepository {
 
   // read todo's
 
+/*
   Stream<List<Todo>> readAllTodo() {
+    print('Lese jetzt alle Todos im Repository');
     return db.snapshots().map(
           (snapShot) => snapShot.docs
               .map((document) => fromJson(document.data()))
               .toList(),
         );
+  }
+  */
+
+  Stream<List<Todo>> readAllTodo() {
+    return db.snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((doc) => Todo.fromEntity(TodoEntity.fromSnapshot(doc)))
+          .toList();
+    });
   }
 
 // update todo's
@@ -87,15 +99,4 @@ class FirestoreTodoRepository {
   }
 
 // transform JSON to Todo-Object
-  Todo fromJson(Map<String, dynamic> json) {
-    return Todo(
-      id: json['ID'],
-      userId: json['UserID'],
-      content: json['description'],
-      timeComplexity: json['TimeComplexity'],
-      importancy: json['Importancy'],
-      difficulty: json['Difficulty'],
-      isCompleted: json['isCompleted'],
-    );
-  }
 }
