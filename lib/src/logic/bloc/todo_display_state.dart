@@ -1,20 +1,20 @@
 part of 'todo_display_bloc.dart';
 
-enum Status { initial, loading, success, failure }
+enum TodoDisplayStatus { initial, loading, success, failure }
 
 class TodoDisplayState extends Equatable {
-  final Status status;
+  final TodoDisplayStatus status;
   final List<Todo> todos;
 
   const TodoDisplayState({
     this.todos = const [],
-    this.status = Status.initial,
+    this.status = TodoDisplayStatus.initial,
   });
 
   List<Todo> get allTodos => todos;
 
   TodoDisplayState copyWith({
-    Status Function()? status,
+    TodoDisplayStatus Function()? status,
     List<Todo> Function()? todos,
   }) {
     return TodoDisplayState(

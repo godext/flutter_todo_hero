@@ -53,14 +53,12 @@ class FirestoreTodoRepository {
 
   // read todo's
 
-  Future<List<Todo>> readAllTodo() async {
-    String currentUser = _authenticationRepository.currentUser.id;
-    late List<Todo> todos = [];
-    var docSnapshot = await db.where("UserID", isEqualTo: currentUser).get();
-    for (var i in docSnapshot.docs) {
-      todos.add(fromJson(i.data()));
-    }
-    return todos;
+  Stream<List<Todo>> readAllTodo() {
+    return db.snapshots().map(
+          (snapShot) => snapShot.docs
+              .map((document) => fromJson(document.data()))
+              .toList(),
+        );
   }
 
 // update todo's
