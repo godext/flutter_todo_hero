@@ -8,6 +8,7 @@ import 'package:todo_hero/src/logic/bloc/todo_bloc.dart';
 import 'package:todo_hero/src/logic/bloc/todo_display_bloc.dart';
 import 'package:todo_hero/src/screens/ToDo/todo_list_tile.dart';
 import 'package:todo_hero/src/screens/screens.dart';
+import 'package:todo_hero/src/util/Icons/flutter_icons.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -21,6 +22,9 @@ class HomePage extends StatelessWidget {
 class TodoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final TodoDisplayBloc todoDisplayBloc =
+        BlocProvider.of<TodoDisplayBloc>(context);
+
     return BlocProvider(
       create: (context) => TodoDisplayBloc(
         repository: FirestoreTodoRepository(
@@ -59,11 +63,13 @@ class TodoList extends StatelessWidget {
                       children: [
                         for (final todo in state.allTodos)
                           TodoListTile(
-                              todo: todo,
-                              leading: const Icon(
-                                  CupertinoIcons.check_mark_circled_solid,
-                                  size: 35,
-                                  color: CupertinoColors.systemBlue))
+                            todo: todo,
+                            leading: todo.isCompleted == true
+                                ? iconTodoFinished
+                                : iconTodoUnfinished,
+                            onTapLeading: () => todoDisplayBloc
+                                .add(TodoDisplaySetCompleted(todo)),
+                          ),
                       ],
                     );
                   },

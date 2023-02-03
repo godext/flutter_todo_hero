@@ -10,3 +10,8 @@ abstract class TodoDisplayEvent extends Equatable {
 class TodoDisplaySubscriptionRequested extends TodoDisplayEvent {
   const TodoDisplaySubscriptionRequested();
 }
+
+class TodoDisplaySetCompleted extends TodoDisplayEvent {
+  Todo todo;
+  TodoDisplaySetCompleted(this.todo);
+}

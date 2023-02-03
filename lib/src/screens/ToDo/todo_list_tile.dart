@@ -7,20 +7,22 @@ import 'package:todo_hero/src/models/model.dart';
 class TodoListTile extends StatelessWidget {
   const TodoListTile({
     required this.todo,
-    this.onTap,
     super.key,
-    this.leading,
+    required this.leading,
+    this.onTapTodo,
+    this.onTapLeading,
   });
 
   final Todo todo;
-  final VoidCallback? onTap;
-  final Widget? leading;
+  final VoidCallback? onTapTodo;
+  final VoidCallback? onTapLeading;
+  final Widget leading;
 
   @override
   Widget build(BuildContext context) {
     print('build-method TodoListTile');
     return ListTile(
-      onTap: onTap,
+      onTap: onTapTodo,
       title: Text(
         todo.content.truncateTo(
           20,
@@ -32,14 +34,20 @@ class TodoListTile extends StatelessWidget {
       ),
       subtitle: Text(
         todo.dateDue.toString(),
+        style: TextStyle(
+          fontSize: 16,
+          color: Colors.grey[600],
+        ),
       ),
-      tileColor: Colors.grey[800],
-      leading: leading,
+      leading: IconButton(
+        icon: this.leading,
+        onPressed: onTapLeading,
+      ),
     );
   }
 }
 
 extension StringExtension on String {
   String truncateTo(int maxLength) =>
-      (this.length <= maxLength) ? this : '${this.substring(0, maxLength)}...';
+      (length <= maxLength) ? this : '${substring(0, maxLength)}...';
 }
