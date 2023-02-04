@@ -65,11 +65,13 @@ class TodoList extends StatelessWidget {
                                 ? iconTodoFinished
                                 : iconTodoUnfinished,
                             onTapLeading: () =>
-                                BlocProvider.of<TodoDisplayBloc>(context)
-                                    .add(TodoDisplayCompletionToggled(
-                              todo: todo,
-                              isCompleted: !todo.isCompleted,
-                            )),
+                                BlocProvider.of<TodoDisplayBloc>(context).add(
+                              TodoDisplayCompletionToggled(
+                                todo: todo,
+                                isCompleted: !todo.isCompleted,
+                              ),
+                            ),
+                            onTapTodo: () {},
                           ),
                       ],
                     );

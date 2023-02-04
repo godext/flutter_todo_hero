@@ -76,6 +76,8 @@ class _ContentInput extends StatelessWidget {
                     context.read<TodoBloc>().add(
                           const TodoSubmitted(),
                         );
+                    //Navigator.of(context).removeRoute(TodoEditPage.route());
+                    Navigator.pop(context);
                   },
                 ),
               ),
