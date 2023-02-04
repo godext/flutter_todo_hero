@@ -88,5 +88,5 @@ class Todo extends Equatable {
   }
 
   @override
-  List<Object?> get props => [content, id, userId];
+  List<Object?> get props => [content, id, userId, isCompleted];
 }
