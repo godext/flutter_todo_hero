@@ -11,7 +11,14 @@ class TodoDisplaySubscriptionRequested extends TodoDisplayEvent {
   const TodoDisplaySubscriptionRequested();
 }
 
-class TodoDisplaySetCompleted extends TodoDisplayEvent {
-  Todo todo;
-  TodoDisplaySetCompleted(this.todo);
+class TodoDisplayCompletionToggled extends TodoDisplayEvent {
+  const TodoDisplayCompletionToggled({
+    required this.todo,
+    required this.isCompleted,
+  });
+  final Todo todo;
+  final bool isCompleted;
+
+  @override
+  List<Object?> get props => [todo, isCompleted];
 }

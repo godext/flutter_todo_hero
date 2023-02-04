@@ -40,7 +40,7 @@ class TodoListTile extends StatelessWidget {
         ),
       ),
       leading: IconButton(
-        icon: this.leading,
+        icon: leading,
         onPressed: onTapLeading,
       ),
     );

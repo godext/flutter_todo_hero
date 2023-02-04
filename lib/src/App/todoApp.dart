@@ -15,7 +15,10 @@ class ToDoApp extends StatelessWidget {
     required AuthenticationRepository authenticationRepository,
   }) : _authenticationRepository = authenticationRepository;
 
-  Todo initialTodo = const Todo(content: '');
+  Todo initialTodo = const Todo(
+    content: '',
+    isCompleted: false,
+  );
 
   final AuthenticationRepository _authenticationRepository;
   // This widget is the root of your application.

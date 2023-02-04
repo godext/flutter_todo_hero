@@ -13,7 +13,7 @@ class TodoDisplayBloc extends Bloc<TodoDisplayEvent, TodoDisplayState> {
       : _repository = repository,
         super(const TodoDisplayState()) {
     on<TodoDisplaySubscriptionRequested>(_onSubscriptionRequested);
-    on<TodoDisplaySetCompleted>(_onTodoDisplaySetCompleted);
+    on<TodoDisplayCompletionToggled>(_onTodoCompletionToggled);
   }
 
   Future<void> _onSubscriptionRequested(
@@ -31,19 +31,13 @@ class TodoDisplayBloc extends Bloc<TodoDisplayEvent, TodoDisplayState> {
             state.copyWith(status: () => TodoDisplayStatus.failure));
   }
 
-  Future<void> _onTodoDisplaySetCompleted(
-    TodoDisplaySetCompleted event,
+  Future<void> _onTodoCompletionToggled(
+    TodoDisplayCompletionToggled event,
     Emitter<TodoDisplayState> emit,
   ) async {
     try {
-      switch (event.todo.isCompleted) {
-        case true:
-          await _repository.updateTodo(event.todo.copyWith(isCompleted: false));
-          break;
-        case false:
-          await _repository.updateTodo(event.todo.copyWith(isCompleted: true));
-          break;
-      }
+      final newTodo = event.todo.copyWith(isCompleted: event.isCompleted);
+      await _repository.updateTodo(newTodo);
     } catch (e) {
       print('Ist ein Fehler aufgetreten :)');
     }

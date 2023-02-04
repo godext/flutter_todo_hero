@@ -22,9 +22,6 @@ class HomePage extends StatelessWidget {
 class TodoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final TodoDisplayBloc todoDisplayBloc =
-        BlocProvider.of<TodoDisplayBloc>(context);
-
     return BlocProvider(
       create: (context) => TodoDisplayBloc(
         repository: FirestoreTodoRepository(
@@ -67,8 +64,12 @@ class TodoList extends StatelessWidget {
                             leading: todo.isCompleted == true
                                 ? iconTodoFinished
                                 : iconTodoUnfinished,
-                            onTapLeading: () => todoDisplayBloc
-                                .add(TodoDisplaySetCompleted(todo)),
+                            onTapLeading: () =>
+                                BlocProvider.of<TodoDisplayBloc>(context)
+                                    .add(TodoDisplayCompletionToggled(
+                              todo: todo,
+                              isCompleted: !todo.isCompleted,
+                            )),
                           ),
                       ],
                     );

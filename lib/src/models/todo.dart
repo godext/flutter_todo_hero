@@ -12,7 +12,7 @@ class Todo extends Equatable {
   final int? importancy;
   final int? difficulty;
   final int? beneficial;
-  final bool? isCompleted;
+  final bool isCompleted;
 
   const Todo({
     required this.content,
@@ -23,11 +23,12 @@ class Todo extends Equatable {
     this.importancy,
     this.difficulty,
     this.beneficial,
-    this.isCompleted,
+    required this.isCompleted,
   });
 
   static const empty = Todo(
     content: '',
+    isCompleted: false,
   );
 
   bool get isEmpty => this == Todo.empty;
