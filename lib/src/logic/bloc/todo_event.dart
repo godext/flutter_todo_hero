@@ -58,3 +58,12 @@ class TodoSubmitted extends TodoEvent {
   @override
   List<Object> get props => [];
 }
+
+class TodoDeleted extends TodoEvent {
+  final String todoId;
+
+  const TodoDeleted(this.todoId);
+
+  @override
+  List<Object> get props => [];
+}

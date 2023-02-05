@@ -86,13 +86,13 @@ class FirestoreTodoRepository {
   }
 
 // Delete todo's
-  Future<void> deleteTodo(Todo todo) async {
-    if (todo.isEmpty) {
+  Future<void> deleteTodo(String documentId) async {
+    if (documentId.isEmpty) {
       throw FirestoreTodoException.fromCode('todo-empty');
     }
 
     try {
-      db.doc(todo.id).delete();
+      db.doc(documentId).delete();
     } catch (e) {
       throw FirestoreTodoException.fromCode('exception-message', e);
     }

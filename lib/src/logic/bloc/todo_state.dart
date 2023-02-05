@@ -18,6 +18,7 @@ class TodoState extends Equatable {
   final int importancy;
   final int difficulty;
   final int beneficial;
+  final String todoId;
 
   const TodoState({
     this.status = TodoStatus.initial,
@@ -28,6 +29,7 @@ class TodoState extends Equatable {
     this.importancy = 0,
     this.difficulty = 0,
     this.beneficial = 0,
+    this.todoId = '',
   });
 
   bool get isNewTodo => initialTodo == null;
@@ -40,7 +42,8 @@ class TodoState extends Equatable {
       int? timeComplexity,
       int? importancy,
       int? difficulty,
-      int? beneficial}) {
+      int? beneficial,
+      String? todoId}) {
     return TodoState(
       status: status ?? this.status,
       initialTodo: initialTodo ?? this.initialTodo,
@@ -50,6 +53,7 @@ class TodoState extends Equatable {
       importancy: importancy ?? this.importancy,
       difficulty: difficulty ?? this.difficulty,
       beneficial: beneficial ?? this.beneficial,
+      todoId: todoId ?? this.todoId,
     );
   }
 
@@ -62,5 +66,6 @@ class TodoState extends Equatable {
         importancy,
         difficulty,
         beneficial,
+        todoId,
       ];
 }

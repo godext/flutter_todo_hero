@@ -36,6 +36,20 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     on<TodoDifficultyChanged>(_onTodoDifficultyChanged);
     on<TodoBeneficialChanged>(_onTodoBeneficialChanged);
     on<TodoSubmitted>(_onTodoSubmitted);
+    on<TodoDeleted>(_onTodoDeleted);
+  }
+
+  void _onTodoDeleted(
+    TodoDeleted event,
+    Emitter<TodoState> emit,
+  ) async {
+    try {
+      await _firestoreTodoRepository.deleteTodo(
+        event.todoId,
+      );
+    } catch (_) {
+      print("Deleting didn't work :)");
+    }
   }
 
   void _onTodoContentChanged(
