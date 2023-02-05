@@ -34,16 +34,17 @@ class TodoState extends Equatable {
 
   bool get isNewTodo => initialTodo == null;
 
-  TodoState copyWith(
-      {TodoStatus? status,
-      Todo? initialTodo,
-      String? content,
-      String? dueDate,
-      int? timeComplexity,
-      int? importancy,
-      int? difficulty,
-      int? beneficial,
-      String? todoId}) {
+  TodoState copyWith({
+    TodoStatus? status,
+    Todo? initialTodo,
+    String? content,
+    String? dueDate,
+    int? timeComplexity,
+    int? importancy,
+    int? difficulty,
+    int? beneficial,
+    String? todoId,
+  }) {
     return TodoState(
       status: status ?? this.status,
       initialTodo: initialTodo ?? this.initialTodo,

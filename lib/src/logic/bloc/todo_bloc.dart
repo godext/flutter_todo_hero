@@ -28,6 +28,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
             importancy: initialTodo?.importancy ?? 0,
             difficulty: initialTodo?.difficulty ?? 0,
             beneficial: initialTodo?.beneficial ?? 0,
+            todoId: initialTodo?.id ?? '',
           ),
         ) {
     on<TodoContentChanged>(_onTodoContentChanged);
@@ -120,6 +121,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
           difficulty: state.difficulty,
           beneficial: state.beneficial,
           dateDue: state.dueDate,
+          id: state.todoId,
         ));
 
     try {

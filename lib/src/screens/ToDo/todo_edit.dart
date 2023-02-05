@@ -75,11 +75,10 @@ class _ContentInput extends StatelessWidget {
           CupertinoDialogAction(
             isDestructiveAction: true,
             onPressed: () {
-              bloc.add(TodoDeleted(bloc.state.todoId));
-              // TODO: Need to find the reason why I have
-              // TODO: no access on the current todo's ID iny my Bloc
               print('Wert von Todo-Id: ${bloc.state.todoId}');
-              Navigator.pop(context);
+              // TODO: Remove the Route that was created in the TodoEditPage-Class
+              Navigator.of(context).pop();
+              bloc.add(TodoDeleted(bloc.state.todoId));
             },
             child: const Text('Yes'),
           ),
@@ -96,7 +95,6 @@ class _ContentInput extends StatelessWidget {
         return Material(
             child: Container(
           color: CupertinoColors.darkBackgroundGray,
-          //padding: const EdgeInsets.all(40.0),
           child: Column(
             children: [
               CupertinoTextFormFieldRow(
@@ -136,9 +134,12 @@ class _ContentInput extends StatelessWidget {
                       // If it's not a new todo, this button shall be GONE
                       visible: !state.isNewTodo,
                       child: CupertinoButton(
-                        child: const Text('Delete'),
-                        onPressed: () => _showAlertDialog(context),
-                      ),
+                          child: const Text('Delete'),
+                          onPressed: () {
+                            print('ID: ${state.todoId}');
+                            print('Content: ${state.content}');
+                            return _showAlertDialog(context);
+                          }),
                     ),
                   ],
                 ),
