@@ -5,7 +5,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:todo_hero/src/data/firestore_todo_repository.dart';
 import 'package:todo_hero/src/models/model.dart';
-import 'package:uuid/uuid.dart';
 
 part 'todo_event.dart';
 part 'todo_state.dart';

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_hero/src/data/firestore_todo_repository.dart';
 import 'package:todo_hero/src/logic/bloc/todo_bloc.dart';
 import 'package:todo_hero/src/models/model.dart';
+import 'package:todo_hero/src/screens/screens.dart';
 import 'package:todo_hero/src/util/widgets/cupertino_scaffold.dart';
 
 @immutable
@@ -77,8 +78,14 @@ class _ContentInput extends StatelessWidget {
             onPressed: () {
               print('Wert von Todo-Id: ${bloc.state.todoId}');
               // TODO: Remove the Route that was created in the TodoEditPage-Class
-              Navigator.of(context).pop();
+              //Navigator.of(context).pop();
               bloc.add(TodoDeleted(bloc.state.todoId));
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => const MainView(),
+                ),
+                (route) => false,
+              );
             },
             child: const Text('Yes'),
           ),
