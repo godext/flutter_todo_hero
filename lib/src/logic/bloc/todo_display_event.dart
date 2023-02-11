@@ -22,3 +22,15 @@ class TodoDisplayCompletionToggled extends TodoDisplayEvent {
   @override
   List<Object?> get props => [todo, isCompleted];
 }
+
+class TodoDisplayDismissed extends TodoDisplayEvent {
+  const TodoDisplayDismissed({
+    required this.todo,
+  });
+
+  final Todo todo;
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [todo];
+}

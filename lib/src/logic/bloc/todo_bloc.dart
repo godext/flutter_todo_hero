@@ -28,6 +28,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
             difficulty: initialTodo?.difficulty ?? 0,
             beneficial: initialTodo?.beneficial ?? 0,
             todoId: initialTodo?.id ?? '',
+            isCompleted: initialTodo?.isCompleted ?? false,
           ),
         ) {
     on<TodoContentChanged>(_onTodoContentChanged);
@@ -37,6 +38,14 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     on<TodoBeneficialChanged>(_onTodoBeneficialChanged);
     on<TodoSubmitted>(_onTodoSubmitted);
     on<TodoDeleted>(_onTodoDeleted);
+    on<TodoCompletionToggled>(_onTodoCompletionToggled);
+  }
+
+  void _onTodoCompletionToggled(
+      TodoCompletionToggled event, Emitter<TodoState> emit) {
+    emit(
+      state.copyWith(isCompleted: event.isCompleted),
+    );
   }
 
   void _onTodoDeleted(
@@ -102,26 +111,26 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     Emitter<TodoState> emit,
   ) async {
     emit(state.copyWith(status: TodoStatus.loading));
-    final todo = (state.initialTodo ??
-        Todo(
-                content: '',
-                timeComplexity: 0,
-                importancy: 0,
-                difficulty: 0,
-                beneficial: 0,
-                userId: _authenticationRepository.currentUser.id,
-                isCompleted: false,
-                dateDue: DateTime.now().toString(),
-                id: '')
-            .copyWith(
-          content: state.content,
-          timeComplexity: state.timeComplexity,
-          importancy: state.importancy,
-          difficulty: state.difficulty,
-          beneficial: state.beneficial,
-          dateDue: state.dueDate,
-          id: state.todoId,
-        ));
+    final todo = Todo(
+            content: '',
+            timeComplexity: 0,
+            importancy: 0,
+            difficulty: 0,
+            beneficial: 0,
+            userId: _authenticationRepository.currentUser.id,
+            isCompleted: false,
+            dateDue: DateTime.now().toString(),
+            id: '')
+        .copyWith(
+      content: state.content,
+      timeComplexity: state.timeComplexity,
+      importancy: state.importancy,
+      difficulty: state.difficulty,
+      beneficial: state.beneficial,
+      dateDue: state.dueDate,
+      id: state.todoId,
+      isCompleted: state.isCompleted,
+    );
 
     try {
       if (state.initialTodo == null) {

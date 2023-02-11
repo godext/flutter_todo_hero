@@ -14,6 +14,7 @@ class TodoDisplayBloc extends Bloc<TodoDisplayEvent, TodoDisplayState> {
         super(const TodoDisplayState()) {
     on<TodoDisplaySubscriptionRequested>(_onSubscriptionRequested);
     on<TodoDisplayCompletionToggled>(_onTodoCompletionToggled);
+    on<TodoDisplayDismissed>(_onTodoDismissed);
   }
 
   Future<void> _onSubscriptionRequested(
@@ -40,6 +41,17 @@ class TodoDisplayBloc extends Bloc<TodoDisplayEvent, TodoDisplayState> {
       await _repository.updateTodo(newTodo);
     } catch (e) {
       print('Ist ein Fehler aufgetreten :)');
+    }
+  }
+
+  Future<void> _onTodoDismissed(
+    TodoDisplayDismissed event,
+    Emitter<TodoDisplayState> emit,
+  ) async {
+    try {
+      await _repository.deleteTodo(event.todo.id!);
+    } catch (e) {
+      print('Fehler beim dismissen der To-Do von der Front-View');
     }
   }
 }

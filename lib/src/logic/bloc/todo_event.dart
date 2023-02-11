@@ -52,6 +52,12 @@ class TodoBeneficialChanged extends TodoEvent {
   List<Object> get props => [beneficial];
 }
 
+class TodoCompletionToggled extends TodoEvent {
+  final bool isCompleted;
+
+  const TodoCompletionToggled(this.isCompleted);
+}
+
 class TodoSubmitted extends TodoEvent {
   const TodoSubmitted();
 

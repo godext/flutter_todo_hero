@@ -50,19 +50,6 @@ class FirestoreTodoRepository {
     }
   }
 
-  // read todo's
-
-/*
-  Stream<List<Todo>> readAllTodo() {
-    print('Lese jetzt alle Todos im Repository');
-    return db.snapshots().map(
-          (snapShot) => snapShot.docs
-              .map((document) => fromJson(document.data()))
-              .toList(),
-        );
-  }
-  */
-
   Stream<List<Todo>> readAllTodo() {
     return db.snapshots().map((snapshot) {
       return snapshot.docs
@@ -97,6 +84,4 @@ class FirestoreTodoRepository {
       throw FirestoreTodoException.fromCode('exception-message', e);
     }
   }
-
-// transform JSON to Todo-Object
 }

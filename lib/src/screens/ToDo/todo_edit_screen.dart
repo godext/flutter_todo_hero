@@ -42,9 +42,9 @@ class TodoEditPage extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 16),
-                    const _ContentInput(),
+                  children: const [
+                    SizedBox(height: 16),
+                    _ContentInput(),
                   ],
                 ),
               ),
@@ -115,6 +115,7 @@ class _ContentInput extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.black,
                 ),
+                autofocus: true,
                 placeholder: 'What are you planning to do?',
                 key: const Key('todoForm_todoCreateOrEdit'),
                 onChanged: (value) {

@@ -52,26 +52,33 @@ class TodoList extends StatelessWidget {
               Expanded(
                 child: BlocBuilder<TodoDisplayBloc, TodoDisplayState>(
                   builder: (context, state) {
+                    TodoDisplayBloc displayBloc =
+                        BlocProvider.of<TodoDisplayBloc>(context);
                     return ListView(
                       //physics: const BouncingScrollPhysics(),
                       physics: const BouncingScrollPhysics(
                           parent: AlwaysScrollableScrollPhysics()),
                       children: [
                         for (final todo in state.allTodos)
-                          TodoListTile(
-                            todo: todo,
-                            leading: todo.isCompleted == true
-                                ? iconTodoFinished
-                                : iconTodoUnfinished,
-                            onTapLeading: () =>
-                                BlocProvider.of<TodoDisplayBloc>(context).add(
-                              TodoDisplayCompletionToggled(
-                                todo: todo,
-                                isCompleted: !todo.isCompleted,
+                          Dismissible(
+                            key: Key(todo.id!),
+                            onDismissed: (direction) => displayBloc
+                                .add(TodoDisplayDismissed(todo: todo)),
+                            background: Container(color: Colors.red),
+                            child: TodoListTile(
+                              todo: todo,
+                              leading: todo.isCompleted == true
+                                  ? iconTodoFinished
+                                  : iconTodoUnfinished,
+                              onTapLeading: () => displayBloc.add(
+                                TodoDisplayCompletionToggled(
+                                  todo: todo,
+                                  isCompleted: !todo.isCompleted,
+                                ),
                               ),
-                            ),
-                            onTapTodo: () => Navigator.of(context).push(
-                              TodoEditPage.route(todo),
+                              onTapTodo: () => Navigator.of(context).push(
+                                TodoEditPage.route(todo),
+                              ),
                             ),
                           ),
                       ],

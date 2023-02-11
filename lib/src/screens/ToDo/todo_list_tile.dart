@@ -22,9 +22,7 @@ class TodoListTile extends StatelessWidget {
     return ListTile(
       onTap: onTapTodo,
       title: Text(
-        todo.content.truncateTo(
-          20,
-        ),
+        todo.content,
         style: const TextStyle(
           fontSize: 20,
           color: CupertinoColors.white,
