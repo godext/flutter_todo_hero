@@ -132,6 +132,11 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       isCompleted: state.isCompleted,
     );
 
+    // Early return wenn der content leer ist
+    if (state.content == '') {
+      return;
+    }
+
     try {
       if (state.initialTodo == null) {
         print('Erstelle eine neue Todo');

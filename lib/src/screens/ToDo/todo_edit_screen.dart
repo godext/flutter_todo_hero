@@ -77,8 +77,6 @@ class _ContentInput extends StatelessWidget {
             isDestructiveAction: true,
             onPressed: () {
               print('Wert von Todo-Id: ${bloc.state.todoId}');
-              // TODO: Remove the Route that was created in the TodoEditPage-Class
-              //Navigator.of(context).pop();
               bloc.add(TodoDeleted(bloc.state.todoId));
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
@@ -96,65 +94,71 @@ class _ContentInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TodoBloc todoBloc = context.read<TodoBloc>();
     return BlocBuilder<TodoBloc, TodoState>(
       buildWhen: (previous, current) => previous.content != current.content,
       builder: (context, state) {
-        return Material(
+        return WillPopScope(
+          onWillPop: (() async {
+            todoBloc.add(const TodoSubmitted());
+            return true;
+          }),
+          child: Material(
             child: Container(
-          color: CupertinoColors.darkBackgroundGray,
-          child: Column(
-            children: [
-              CupertinoTextFormFieldRow(
-                initialValue: state.content,
-                placeholderStyle: TextStyle(color: Colors.grey[500]),
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    )),
-                style: const TextStyle(
-                  color: Colors.black,
-                ),
-                autofocus: true,
-                placeholder: 'What are you planning to do?',
-                key: const Key('todoForm_todoCreateOrEdit'),
-                onChanged: (value) {
-                  context.read<TodoBloc>().add(
+              color: CupertinoColors.darkBackgroundGray,
+              child: Column(
+                children: [
+                  CupertinoTextFormFieldRow(
+                    initialValue: state.content,
+                    placeholderStyle: TextStyle(color: Colors.grey[500]),
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        )),
+                    style: const TextStyle(
+                      color: Colors.black,
+                    ),
+                    autofocus: true,
+                    placeholder: 'What are you planning to do?',
+                    key: const Key('todoForm_todoCreateOrEdit'),
+                    onChanged: (value) {
+                      todoBloc.add(
                         TodoContentChanged(value),
                       );
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 15, 0, 30),
-                child: Column(
-                  children: [
-                    CupertinoButton.filled(
-                      child: Text(state.isNewTodo ? 'Add' : 'Edit'),
-                      onPressed: () {
-                        context.read<TodoBloc>().add(
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 15, 0, 30),
+                    child: Column(
+                      children: [
+                        CupertinoButton.filled(
+                          child: Text(state.isNewTodo ? 'Add' : 'Edit'),
+                          onPressed: () {
+                            todoBloc.add(
                               const TodoSubmitted(),
                             );
-                        Navigator.pop(context);
-                      },
+                            Navigator.pop(context);
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        Visibility(
+                          // If it's not a new todo, this button shall be GONE
+                          visible: !state.isNewTodo,
+                          child: CupertinoButton(
+                              child: const Text('Delete'),
+                              onPressed: () {
+                                return _showAlertDialog(context);
+                              }),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 10),
-                    Visibility(
-                      // If it's not a new todo, this button shall be GONE
-                      visible: !state.isNewTodo,
-                      child: CupertinoButton(
-                          child: const Text('Delete'),
-                          onPressed: () {
-                            print('ID: ${state.todoId}');
-                            print('Content: ${state.content}');
-                            return _showAlertDialog(context);
-                          }),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ));
+        );
       },
     );
   }

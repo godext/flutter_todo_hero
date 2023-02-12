@@ -38,7 +38,25 @@ class TodoList extends StatelessWidget {
                 color: CupertinoColors.white,
               )),
           backgroundColor: CupertinoColors.systemBlue,
+          leading: IconButton(
+            icon: const Icon(CupertinoIcons.slider_horizontal_3),
+            color: Colors.white,
+            onPressed: () => CupertinoActionSheet(
+              title: const Text("Filter To-Do's"),
+              actions: [
+                CupertinoActionSheetAction(
+                  onPressed: ((() {})),
+                  child: Text('Active'),
+                ),
+                CupertinoActionSheetAction(
+                  onPressed: ((() {})),
+                  child: Text('Done'),
+                ),
+              ],
+            ),
+          ),
           trailing: IconButton(
+            color: Colors.white,
             onPressed: () {
               context.read<AppBloc>().add(const AppLogoutRequested());
             },
@@ -52,6 +70,7 @@ class TodoList extends StatelessWidget {
               Expanded(
                 child: BlocBuilder<TodoDisplayBloc, TodoDisplayState>(
                   builder: (context, state) {
+                    Color dismissColor;
                     TodoDisplayBloc displayBloc =
                         BlocProvider.of<TodoDisplayBloc>(context);
                     return ListView(
@@ -62,9 +81,36 @@ class TodoList extends StatelessWidget {
                         for (final todo in state.allTodos)
                           Dismissible(
                             key: Key(todo.id!),
-                            onDismissed: (direction) => displayBloc
-                                .add(TodoDisplayDismissed(todo: todo)),
-                            background: Container(color: Colors.red),
+                            direction: DismissDirection.horizontal,
+                            onDismissed: (direction) {
+                              if (direction == DismissDirection.startToEnd) {
+                                displayBloc
+                                    .add(TodoDisplayDismissed(todo: todo));
+                              }
+
+                              if (direction == DismissDirection.endToStart) {
+                                displayBloc.add(TodoDisplayCompletionToggled(
+                                  todo: todo,
+                                  isCompleted: !todo.isCompleted,
+                                ));
+                              }
+                            },
+                            background: Container(
+                              color: Colors.red,
+                              alignment: Alignment.centerLeft,
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                            ),
+                            secondaryBackground: Container(
+                              color: Colors.green,
+                              alignment: Alignment.centerRight,
+                              child: const Icon(
+                                Icons.done,
+                                color: Colors.white,
+                              ),
+                            ),
                             child: TodoListTile(
                               todo: todo,
                               leading: todo.isCompleted == true

@@ -40,12 +40,12 @@ class _MainViewState extends State<MainView> {
         inactiveColor: const Color(0xFF7C7C7C),
         height: 50,
         iconSize: 30,
-        items: [
-          const BottomNavigationBarItem(
+        items: const [
+          BottomNavigationBarItem(
             icon: Icon(Icons.home_rounded),
             label: 'Home',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.person_rounded),
             label: 'Profile',
           )
