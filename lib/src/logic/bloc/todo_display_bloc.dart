@@ -23,7 +23,7 @@ class TodoDisplayBloc extends Bloc<TodoDisplayEvent, TodoDisplayState> {
   ) async {
     emit(state.copyWith(status: () => TodoDisplayStatus.loading));
 
-    await emit.forEach<List<Todo>>(_repository.readAllTodo(),
+    await emit.forEach<List<Todo>>(_repository.readTodoByUser(),
         onData: (todos) => state.copyWith(
               status: () => TodoDisplayStatus.success,
               todos: () => todos,

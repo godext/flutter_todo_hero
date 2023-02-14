@@ -2,6 +2,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:todo_hero/src/Entities/entities.dart';
 import 'package:todo_hero/src/models/model.dart';
+import 'package:todo_hero/src/util/constants/firestore_constants/firestore_constants.dart';
 import 'package:todo_hero/src/util/exceptions/custom_exceptions.dart';
 import 'package:uuid/uuid.dart';
 
@@ -24,29 +25,25 @@ class FirestoreTodoRepository {
 
 // create todo's
   Future<DocumentReference?> createTodo(Todo todo) async {
-    //error-handle
-    if (todo.isEmpty) {
-      throw FirestoreTodoException.fromCode('todo-empty');
-    }
-
     try {
-      final String todoID = const Uuid().v4();
-      //var docRef = db.doc();
-      String? userID;
-
-      if (todo.userId == null) {
-        userID = _authenticationRepository.currentUser.id;
+      // Check that the todo is not empty
+      if (todo.isEmpty) {
+        throw FirestoreTodoException.fromCode('todo-empty');
       }
 
-      todo = todo.copyWith(
-        id: todoID,
-        userId: userID,
-      );
+      // Set the todo ID and user ID (if not already set)
+      final todoID = const Uuid().v4();
+      final userID = todo.userId ?? _authenticationRepository.currentUser.id;
+      todo = todo.copyWith(id: todoID, userId: userID);
 
-      return db.add(todo.toJson(todo));
+      // Add the todo to the database and return the document reference
+      final documentReference = await db.add(
+        todo.toJson(todo),
+      );
+      return documentReference;
     } catch (e) {
-      FirestoreTodoException.fromCode('exception-message', e);
-      return null;
+      // Handle any errors that occur during the process
+      throw FirestoreTodoException.fromCode('exception-message', e.toString());
     }
   }
 
@@ -56,6 +53,16 @@ class FirestoreTodoRepository {
           .map((doc) => Todo.fromEntity(TodoEntity.fromSnapshot(doc)))
           .toList();
     });
+  }
+
+  Stream<List<Todo>> readTodoByUser() {
+    final currentUserID = _authenticationRepository.currentUser.userID;
+    return db
+        .where(ownerUserIdFieldName, isEqualTo: currentUserID)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Todo.fromEntity(TodoEntity.fromSnapshot(doc)))
+            .toList());
   }
 
 // update todo's
@@ -72,16 +79,18 @@ class FirestoreTodoRepository {
     }
   }
 
-// Delete todo's
   Future<void> deleteTodo(String documentId) async {
-    if (documentId.isEmpty) {
-      throw FirestoreTodoException.fromCode('todo-empty');
-    }
-
     try {
-      db.doc(documentId).delete();
+      // Check that the document ID is not empty
+      if (documentId.isEmpty) {
+        throw FirestoreTodoException.fromCode('todo-empty');
+      }
+
+      // Delete the todo from the database
+      await db.doc(documentId).delete();
     } catch (e) {
-      throw FirestoreTodoException.fromCode('exception-message', e);
+      // Handle any errors that occur during the process
+      throw FirestoreTodoException.fromCode('delete-todo-error', e.toString());
     }
   }
 }
