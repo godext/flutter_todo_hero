@@ -14,11 +14,13 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TodoList();
+    return const TodoList();
   }
 }
 
 class TodoList extends StatelessWidget {
+  const TodoList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -46,11 +48,11 @@ class TodoList extends StatelessWidget {
               actions: [
                 CupertinoActionSheetAction(
                   onPressed: ((() {})),
-                  child: Text('Active'),
+                  child: const Text('Active'),
                 ),
                 CupertinoActionSheetAction(
                   onPressed: ((() {})),
-                  child: Text('Done'),
+                  child: const Text('Done'),
                 ),
               ],
             ),
@@ -70,7 +72,6 @@ class TodoList extends StatelessWidget {
               Expanded(
                 child: BlocBuilder<TodoDisplayBloc, TodoDisplayState>(
                   builder: (context, state) {
-                    Color dismissColor;
                     TodoDisplayBloc displayBloc =
                         BlocProvider.of<TodoDisplayBloc>(context);
                     return ListView(
