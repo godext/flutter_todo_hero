@@ -15,6 +15,23 @@ class TodoDisplayBloc extends Bloc<TodoDisplayEvent, TodoDisplayState> {
     on<TodoDisplaySubscriptionRequested>(_onSubscriptionRequested);
     on<TodoDisplayCompletionToggled>(_onTodoCompletionToggled);
     on<TodoDisplayDismissed>(_onTodoDismissed);
+    on<TodoDisplayFilterSet>(_onTodoFilterSet);
+  }
+
+  Future<void> _onTodoFilterSet(
+    TodoDisplayFilterSet event,
+    Emitter<TodoDisplayState> emit,
+  ) async {
+    emit(state.copyWith(status: () => TodoDisplayStatus.loading));
+
+    await emit.forEach<List<Todo>>(_repository.readTodoByFilter(event.filter),
+        onData: (todos) => state.copyWith(
+              status: () => TodoDisplayStatus.success,
+              todos: () => todos,
+            ),
+        onError: (_, __) => state.copyWith(
+              status: () => TodoDisplayStatus.failure,
+            ));
   }
 
   Future<void> _onSubscriptionRequested(
@@ -23,10 +40,11 @@ class TodoDisplayBloc extends Bloc<TodoDisplayEvent, TodoDisplayState> {
   ) async {
     emit(state.copyWith(status: () => TodoDisplayStatus.loading));
 
-    await emit.forEach<List<Todo>>(_repository.readTodoByUser(),
+    await emit.forEach<List<Todo>>(_repository.readTodoByFilter(state.filter),
         onData: (todos) => state.copyWith(
               status: () => TodoDisplayStatus.success,
               todos: () => todos,
+              filter: () => state.filter,
             ),
         onError: (_, __) =>
             state.copyWith(status: () => TodoDisplayStatus.failure));

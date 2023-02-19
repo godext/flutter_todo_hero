@@ -14,12 +14,23 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const TodoList();
+    return TodoList();
   }
 }
 
 class TodoList extends StatelessWidget {
-  const TodoList({super.key});
+  TodoList({super.key});
+
+  // Define a private variable to hold the error message
+  String? _errorMessage;
+
+  // Define a getter method called 'error' to retrieve the error message
+  String? get error => _errorMessage;
+
+  // Define a method to set the error message
+  void setError(String errorMessage) {
+    _errorMessage = errorMessage;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,22 +51,52 @@ class TodoList extends StatelessWidget {
                 color: CupertinoColors.white,
               )),
           backgroundColor: CupertinoColors.systemBlue,
-          leading: IconButton(
-            icon: const Icon(CupertinoIcons.slider_horizontal_3),
-            color: Colors.white,
-            onPressed: () => CupertinoActionSheet(
-              title: const Text("Filter To-Do's"),
-              actions: [
-                CupertinoActionSheetAction(
-                  onPressed: ((() {})),
-                  child: const Text('Active'),
-                ),
-                CupertinoActionSheetAction(
-                  onPressed: ((() {})),
-                  child: const Text('Done'),
-                ),
-              ],
+          leading: PopupMenuButton<String>(
+            icon: const Icon(
+              CupertinoIcons.slider_horizontal_3,
+              color: Colors.white,
             ),
+            onSelected: (String choice) {},
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem<String>(
+                  value: 'All',
+                  child: _buildMenuItem(
+                    'All',
+                    context.read<TodoDisplayBloc>().state.filter,
+                    context,
+                  ),
+                  onTap: () => context.read<TodoDisplayBloc>().add(
+                        const TodoDisplayFilterSet(
+                            filter: TodoDisplayFilter.all),
+                      ),
+                ),
+                PopupMenuItem<String>(
+                  value: 'Active',
+                  child: _buildMenuItem(
+                    'Active',
+                    context.read<TodoDisplayBloc>().state.filter,
+                    context,
+                  ),
+                  onTap: () => context.read<TodoDisplayBloc>().add(
+                        const TodoDisplayFilterSet(
+                            filter: TodoDisplayFilter.active),
+                      ),
+                ),
+                PopupMenuItem<String>(
+                  value: 'Done',
+                  child: _buildMenuItem(
+                    'Done',
+                    context.read<TodoDisplayBloc>().state.filter,
+                    context,
+                  ),
+                  onTap: () => context.read<TodoDisplayBloc>().add(
+                        const TodoDisplayFilterSet(
+                            filter: TodoDisplayFilter.done),
+                      ),
+                ),
+              ];
+            },
           ),
           trailing: IconButton(
             color: Colors.white,
@@ -158,4 +199,19 @@ class TodoList extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildMenuItem(
+    String value, TodoDisplayFilter filter, BuildContext context) {
+  return Row(
+    children: [
+      Text(value),
+      if (TodoDisplayFilter.values.byName(value.toLowerCase()) == filter)
+        Icon(
+          CupertinoIcons.checkmark_alt,
+          size: 18,
+          color: CupertinoColors.systemBlue.withOpacity(0.8),
+        )
+    ],
+  );
 }

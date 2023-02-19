@@ -31,6 +31,16 @@ class TodoDisplayDismissed extends TodoDisplayEvent {
   final Todo todo;
 
   @override
-  // TODO: implement props
   List<Object?> get props => [todo];
+}
+
+class TodoDisplayFilterSet extends TodoDisplayEvent {
+  const TodoDisplayFilterSet({
+    required this.filter,
+  });
+
+  final TodoDisplayFilter filter;
+
+  @override
+  List<Object?> get props => [filter];
 }
