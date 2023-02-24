@@ -7,7 +7,6 @@ import 'package:bloc/bloc.dart';
 class AppBlocObserver extends BlocObserver {
   @override
   void onEvent(Bloc<dynamic, dynamic> bloc, Object? event) {
-    log('bin im onEvent');
     super.onEvent(bloc, event);
     print(event);
   }
@@ -20,9 +19,8 @@ class AppBlocObserver extends BlocObserver {
 
   @override
   void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
-    log('Bin im on-change');
     super.onChange(bloc, change);
-    print(change);
+    //  print(change);
   }
 
   @override

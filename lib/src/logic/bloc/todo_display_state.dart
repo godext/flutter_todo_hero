@@ -12,10 +12,12 @@ class TodoDisplayState extends Equatable {
   const TodoDisplayState({
     this.todos = const [],
     this.status = TodoDisplayStatus.initial,
-    this.filter = TodoDisplayFilter.active,
+    this.filter = TodoDisplayFilter.all,
   });
 
   List<Todo> get allTodos => todos;
+
+  TodoDisplayFilter get currentFilter => filter;
 
   TodoDisplayState copyWith({
     TodoDisplayStatus Function()? status,
