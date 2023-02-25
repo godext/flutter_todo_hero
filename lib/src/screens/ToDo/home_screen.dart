@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_hero/src/data/repositories.dart';
 import 'package:todo_hero/src/logic/bloc/app_bloc.dart';
 import 'package:todo_hero/src/logic/bloc/todo_display_bloc.dart';
-import 'package:todo_hero/src/models/model.dart';
 import 'package:todo_hero/src/screens/ToDo/todo_list_tile.dart';
 import 'package:todo_hero/src/screens/screens.dart';
 

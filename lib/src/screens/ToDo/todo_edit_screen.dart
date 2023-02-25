@@ -1,9 +1,11 @@
+import 'dart:developer';
+
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_hero/src/data/firestore_todo_repository.dart';
-import 'package:todo_hero/src/logic/bloc/todo_bloc.dart';
+import 'package:todo_hero/src/logic/bloc/todo_edit_bloc.dart';
 import 'package:todo_hero/src/models/model.dart';
 import 'package:todo_hero/src/screens/screens.dart';
 import 'package:todo_hero/src/util/widgets/cupertino_scaffold.dart';
@@ -31,7 +33,7 @@ class TodoEditPage extends StatelessWidget {
         context.read<AuthenticationRepository>(),
       ),
       child: BlocProvider(
-        create: (context) => TodoBloc(
+        create: (context) => TodoEditBloc(
           firestoreTodoRepository: context.read<FirestoreTodoRepository>(),
           authenticationRepository: context.read<AuthenticationRepository>(),
           initialTodo: initialTodo,
@@ -43,7 +45,7 @@ class TodoEditPage extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: const [
-                    SizedBox(height: 16),
+                    SizedBox(height: 20),
                     _ContentInput(),
                   ],
                 ),
@@ -58,7 +60,7 @@ class _ContentInput extends StatelessWidget {
   const _ContentInput();
 
   void _showAlertDialog(BuildContext context) {
-    TodoBloc bloc = BlocProvider.of<TodoBloc>(context);
+    TodoEditBloc bloc = BlocProvider.of<TodoEditBloc>(context);
 
     showCupertinoModalPopup<void>(
       context: context,
@@ -94,54 +96,155 @@ class _ContentInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TodoBloc todoBloc = context.read<TodoBloc>();
-    return BlocBuilder<TodoBloc, TodoState>(
-      buildWhen: (previous, current) => previous.content != current.content,
+    int selectedSegment = 1;
+    const segmentCount = 5;
+    final TodoEditBloc todoEditBloc = context.read<TodoEditBloc>();
+    log('Wert von Time-Complexity ist: ${todoEditBloc.state.timeComplexity}');
+
+    return BlocBuilder<TodoEditBloc, TodoEditState>(
+      buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         return WillPopScope(
           onWillPop: (() async {
-            todoBloc.add(const TodoSubmitted());
+            todoEditBloc.add(const TodoSubmitted());
             return true;
           }),
           child: Material(
             child: Container(
+              padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
               color: CupertinoColors.darkBackgroundGray,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CupertinoTextFormFieldRow(
-                    initialValue: state.content,
-                    placeholderStyle: TextStyle(color: Colors.grey[500]),
-                    decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        )),
-                    style: const TextStyle(
-                      color: Colors.black,
-                    ),
-                    autofocus: true,
-                    placeholder: 'What are you planning to do?',
-                    key: const Key('todoForm_todoCreateOrEdit'),
-                    onChanged: (value) {
-                      todoBloc.add(
-                        TodoContentChanged(value),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Title',
+                          style: TextStyle(color: CupertinoColors.white)),
+                      const SizedBox(height: 10),
+                      CupertinoTextFormFieldRow(
+                        padding: const EdgeInsetsDirectional.all(0),
+                        initialValue: state.content,
+                        placeholderStyle: TextStyle(color: Colors.grey[500]),
+                        decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            )),
+                        style: const TextStyle(
+                          color: Colors.black,
+                        ),
+                        autofocus: true,
+                        placeholder: 'What are you planning to do?',
+                        key: const Key('todoForm_todoCreateOrEdit'),
+                        onChanged: (value) {
+                          todoEditBloc.add(
+                            TodoContentChanged(value),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 25),
+                  const Text('Difficulty',
+                      style: TextStyle(color: CupertinoColors.white)),
+                  const SizedBox(height: 10),
+                  // TimeComplexity
+                  BlocBuilder<TodoEditBloc, TodoEditState>(
+                    builder: (context, state) {
+                      return CupertinoSlidingSegmentedControl<int>(
+                        backgroundColor: CupertinoColors.systemGrey2,
+                        groupValue: state.timeComplexity == 0
+                            ? 1
+                            : state.timeComplexity,
+                        thumbColor: CupertinoColors.systemBlue,
+                        onValueChanged: (int? value) {
+                          if (value != null) {
+                            //selectedSegment = value;
+                            todoEditBloc.add(
+                              TodoTimeComplexityChanged(value),
+                            );
+                          }
+                        },
+                        children: Map.fromEntries(
+                          List.generate(
+                            segmentCount,
+                            (index) => MapEntry(
+                              index + 1,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 25),
+                                child: Text(
+                                  '${index + 1}',
+                                  style: const TextStyle(
+                                    color: CupertinoColors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       );
                     },
                   ),
+                  const SizedBox(height: 25),
+                  const Text('Time-complexity',
+                      style: TextStyle(color: CupertinoColors.white)),
+                  const SizedBox(height: 10),
+                  // TimeComplexity
+                  BlocBuilder<TodoEditBloc, TodoEditState>(
+                    builder: (context, state) {
+                      return CupertinoSlidingSegmentedControl<int>(
+                        backgroundColor: CupertinoColors.systemGrey2,
+                        groupValue: state.timeComplexity == 0
+                            ? 1
+                            : state.timeComplexity,
+                        thumbColor: CupertinoColors.systemBlue,
+                        onValueChanged: (int? value) {
+                          if (value != null) {
+                            //selectedSegment = value;
+                            todoEditBloc.add(
+                              TodoTimeComplexityChanged(value),
+                            );
+                          }
+                        },
+                        children: Map.fromEntries(
+                          List.generate(
+                            segmentCount,
+                            (index) => MapEntry(
+                              index + 1,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 25),
+                                child: Text(
+                                  '${index + 1}',
+                                  style: const TextStyle(
+                                    color: CupertinoColors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 35),
+
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 15, 0, 30),
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
                     child: Column(
                       children: [
                         CupertinoButton.filled(
                           child: Text(state.isNewTodo ? 'Add' : 'Edit'),
                           onPressed: () {
-                            todoBloc.add(
+                            todoEditBloc.add(
                               const TodoSubmitted(),
                             );
                             Navigator.pop(context);
                           },
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 20),
                         Visibility(
                           // If it's not a new todo, this button shall be GONE
                           visible: !state.isNewTodo,

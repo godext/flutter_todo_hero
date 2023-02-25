@@ -23,15 +23,13 @@ class TodoDisplayBloc extends Bloc<TodoDisplayEvent, TodoDisplayState> {
     TodoDisplayFilterSet event,
     Emitter<TodoDisplayState> emit,
   ) async {
-    log("before setting filter: ${state.filter.toString()}");
     emit(
       state.copyWith(
         status: () => TodoDisplayStatus.loading,
         filter: () => event.filter,
       ),
     );
-
-    log("after setting filter: ${state.filter.toString()}");
+  
 
     await emit.forEach<List<Todo>>(
         _repository.readTodoByFilter(
@@ -44,8 +42,6 @@ class TodoDisplayBloc extends Bloc<TodoDisplayEvent, TodoDisplayState> {
         onError: (_, __) => state.copyWith(
               status: () => TodoDisplayStatus.failure,
             ));
-
-    log("after reading the filtered list: ${state.filter.toString()}");
   }
 
   Future<void> _onSubscriptionRequested(
@@ -53,8 +49,6 @@ class TodoDisplayBloc extends Bloc<TodoDisplayEvent, TodoDisplayState> {
     Emitter<TodoDisplayState> emit,
   ) async {
     emit(state.copyWith(status: () => TodoDisplayStatus.loading));
-
-    log("Im Subscription Requested ${state.filter.toString()}");
 
     await emit.forEach<List<Todo>>(_repository.readTodoByFilter(state.filter),
         onData: (todos) => state.copyWith(
@@ -78,7 +72,6 @@ class TodoDisplayBloc extends Bloc<TodoDisplayEvent, TodoDisplayState> {
       emit(state.copyWith(
           // filter: () => state.currentFilter,
           ));
-      log("Nach dem completion-toggled: ${state.filter.toString()}");
     } catch (e) {
       log("Error onCompletionToggled: $e");
     }

@@ -1,4 +1,4 @@
-part of 'todo_bloc.dart';
+part of 'todo_edit_bloc.dart';
 
 enum TodoStatus { initial, loading, success, failure }
 
@@ -9,7 +9,7 @@ extension TodoStatusX on TodoStatus {
       ].contains(this);
 }
 
-class TodoState extends Equatable {
+class TodoEditState extends Equatable {
   final TodoStatus status;
   final Todo? initialTodo;
   final String content;
@@ -21,22 +21,22 @@ class TodoState extends Equatable {
   final String todoId;
   final bool isCompleted;
 
-  const TodoState({
+  const TodoEditState({
     this.status = TodoStatus.initial,
     this.initialTodo,
     this.content = '',
     this.dueDate = '',
-    this.timeComplexity = 0,
-    this.importancy = 0,
-    this.difficulty = 0,
-    this.beneficial = 0,
+    this.timeComplexity = 1,
+    this.importancy = 1,
+    this.difficulty = 1,
+    this.beneficial = 1,
     this.todoId = '',
     this.isCompleted = false,
   });
 
   bool get isNewTodo => initialTodo == null;
 
-  TodoState copyWith({
+  TodoEditState copyWith({
     TodoStatus? status,
     Todo? initialTodo,
     String? content,
@@ -48,7 +48,7 @@ class TodoState extends Equatable {
     String? todoId,
     bool? isCompleted,
   }) {
-    return TodoState(
+    return TodoEditState(
       status: status ?? this.status,
       initialTodo: initialTodo ?? this.initialTodo,
       content: content ?? this.content,

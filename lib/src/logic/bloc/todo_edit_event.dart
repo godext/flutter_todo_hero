@@ -1,13 +1,13 @@
-part of 'todo_bloc.dart';
+part of 'todo_edit_bloc.dart';
 
-abstract class TodoEvent extends Equatable {
-  const TodoEvent();
+abstract class TodoEditEvent extends Equatable {
+  const TodoEditEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class TodoContentChanged extends TodoEvent {
+class TodoContentChanged extends TodoEditEvent {
   const TodoContentChanged(this.content);
 
   final String content;
@@ -16,7 +16,7 @@ class TodoContentChanged extends TodoEvent {
   List<Object> get props => [content];
 }
 
-class TodoTimeComplexityChanged extends TodoEvent {
+class TodoTimeComplexityChanged extends TodoEditEvent {
   final int timeComplexity;
 
   const TodoTimeComplexityChanged(this.timeComplexity);
@@ -25,7 +25,7 @@ class TodoTimeComplexityChanged extends TodoEvent {
   List<Object> get props => [timeComplexity];
 }
 
-class TodoImportancyChanged extends TodoEvent {
+class TodoImportancyChanged extends TodoEditEvent {
   final int importancy;
 
   const TodoImportancyChanged(this.importancy);
@@ -34,7 +34,7 @@ class TodoImportancyChanged extends TodoEvent {
   List<Object> get props => [importancy];
 }
 
-class TodoDifficultyChanged extends TodoEvent {
+class TodoDifficultyChanged extends TodoEditEvent {
   final int difficulty;
 
   const TodoDifficultyChanged(this.difficulty);
@@ -43,7 +43,7 @@ class TodoDifficultyChanged extends TodoEvent {
   List<Object> get props => [difficulty];
 }
 
-class TodoBeneficialChanged extends TodoEvent {
+class TodoBeneficialChanged extends TodoEditEvent {
   final int beneficial;
 
   const TodoBeneficialChanged(this.beneficial);
@@ -52,20 +52,20 @@ class TodoBeneficialChanged extends TodoEvent {
   List<Object> get props => [beneficial];
 }
 
-class TodoCompletionToggled extends TodoEvent {
+class TodoCompletionToggled extends TodoEditEvent {
   final bool isCompleted;
 
   const TodoCompletionToggled(this.isCompleted);
 }
 
-class TodoSubmitted extends TodoEvent {
+class TodoSubmitted extends TodoEditEvent {
   const TodoSubmitted();
 
   @override
   List<Object> get props => [];
 }
 
-class TodoDeleted extends TodoEvent {
+class TodoDeleted extends TodoEditEvent {
   final String todoId;
 
   const TodoDeleted(this.todoId);

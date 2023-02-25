@@ -3,7 +3,7 @@ import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_hero/src/logic/bloc/app_bloc.dart';
-import 'package:todo_hero/src/logic/bloc/todo_bloc.dart';
+import 'package:todo_hero/src/logic/bloc/todo_edit_bloc.dart';
 import 'package:todo_hero/src/models/model.dart';
 import 'package:todo_hero/src/screens/ToDo/home_screen.dart';
 import 'package:todo_hero/src/screens/screens.dart';

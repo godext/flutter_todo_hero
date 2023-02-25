@@ -6,27 +6,27 @@ import 'package:equatable/equatable.dart';
 import 'package:todo_hero/src/data/firestore_todo_repository.dart';
 import 'package:todo_hero/src/models/model.dart';
 
-part 'todo_event.dart';
-part 'todo_state.dart';
+part 'todo_edit_event.dart';
+part 'todo_edit_state.dart';
 
-class TodoBloc extends Bloc<TodoEvent, TodoState> {
+class TodoEditBloc extends Bloc<TodoEditEvent, TodoEditState> {
   final FirestoreTodoRepository _firestoreTodoRepository;
   final AuthenticationRepository _authenticationRepository;
 
-  TodoBloc({
+  TodoEditBloc({
     required FirestoreTodoRepository firestoreTodoRepository,
     required AuthenticationRepository authenticationRepository,
     required Todo? initialTodo,
   })  : _firestoreTodoRepository = firestoreTodoRepository,
         _authenticationRepository = authenticationRepository,
         super(
-          TodoState(
+          TodoEditState(
             initialTodo: initialTodo,
             content: initialTodo?.content ?? '',
-            timeComplexity: initialTodo?.timeComplexity ?? 0,
-            importancy: initialTodo?.importancy ?? 0,
-            difficulty: initialTodo?.difficulty ?? 0,
-            beneficial: initialTodo?.beneficial ?? 0,
+            timeComplexity: initialTodo?.timeComplexity ?? 1,
+            importancy: initialTodo?.importancy ?? 1,
+            difficulty: initialTodo?.difficulty ?? 1,
+            beneficial: initialTodo?.beneficial ?? 1,
             todoId: initialTodo?.id ?? '',
             isCompleted: initialTodo?.isCompleted ?? false,
           ),
@@ -42,7 +42,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   }
 
   void _onTodoCompletionToggled(
-      TodoCompletionToggled event, Emitter<TodoState> emit) {
+      TodoCompletionToggled event, Emitter<TodoEditState> emit) {
     emit(
       state.copyWith(isCompleted: event.isCompleted),
     );
@@ -50,7 +50,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   void _onTodoDeleted(
     TodoDeleted event,
-    Emitter<TodoState> emit,
+    Emitter<TodoEditState> emit,
   ) async {
     try {
       await _firestoreTodoRepository.deleteTodo(
@@ -63,7 +63,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   void _onTodoContentChanged(
     TodoContentChanged event,
-    Emitter<TodoState> emit,
+    Emitter<TodoEditState> emit,
   ) {
     emit(
       state.copyWith(content: event.content),
@@ -72,7 +72,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   void _onTodoTimeComplexityChanged(
     TodoTimeComplexityChanged event,
-    Emitter<TodoState> emit,
+    Emitter<TodoEditState> emit,
   ) {
     emit(
       state.copyWith(timeComplexity: event.timeComplexity),
@@ -81,7 +81,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   void _onTodoImportancyChanged(
     TodoImportancyChanged event,
-    Emitter<TodoState> emit,
+    Emitter<TodoEditState> emit,
   ) {
     emit(
       state.copyWith(importancy: event.importancy),
@@ -90,7 +90,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   void _onTodoDifficultyChanged(
     TodoDifficultyChanged event,
-    Emitter<TodoState> emit,
+    Emitter<TodoEditState> emit,
   ) {
     emit(
       state.copyWith(difficulty: event.difficulty),
@@ -99,7 +99,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   void _onTodoBeneficialChanged(
     TodoBeneficialChanged event,
-    Emitter<TodoState> emit,
+    Emitter<TodoEditState> emit,
   ) {
     emit(
       state.copyWith(beneficial: event.beneficial),
@@ -108,7 +108,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   Future<void> _onTodoSubmitted(
     TodoSubmitted event,
-    Emitter<TodoState> emit,
+    Emitter<TodoEditState> emit,
   ) async {
     emit(state.copyWith(status: TodoStatus.loading));
     final todo = Todo(

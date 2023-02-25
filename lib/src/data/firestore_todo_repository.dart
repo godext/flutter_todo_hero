@@ -78,10 +78,12 @@ class FirestoreTodoRepository {
         return _readAllTodoByUser();
       case TodoDisplayFilter.active:
       log('Ich filtere jetzt nach Active');
-        return _readTodoFilter(false);
+      return _readAllTodoByUser();
+        //return _readTodoFilter(false);
       case TodoDisplayFilter.done:
         log('Ich filtere jetzt nach Done');
-        return _readTodoFilter(true);
+        return _readAllTodoByUser();
+       // return _readTodoFilter(true);
       default:
       log('Ich filtere jetzt nach All -> Default');
         return _readAllTodoByUser();
