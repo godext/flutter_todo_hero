@@ -8,7 +8,6 @@ import 'package:todo_hero/src/logic/bloc/todo_display_bloc.dart';
 import 'package:todo_hero/src/models/model.dart';
 import 'package:todo_hero/src/screens/ToDo/todo_list_tile.dart';
 import 'package:todo_hero/src/screens/screens.dart';
-import 'package:todo_hero/src/util/Icons/flutter_icons.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -57,8 +56,8 @@ class TodoList extends StatelessWidget {
               TodoDisplayBloc bloc = context.read<TodoDisplayBloc>();
               final filters = [
                 {'value': TodoDisplayFilter.all, 'text': 'All'},
-                {'value': TodoDisplayFilter.done, 'text': 'Done'},
                 {'value': TodoDisplayFilter.active, 'text': 'Active'},
+                {'value': TodoDisplayFilter.done, 'text': 'Done'},
               ];
               return PopupMenuButton<String>(
                 icon: const Icon(
@@ -104,58 +103,70 @@ class TodoList extends StatelessWidget {
                   builder: (context, state) {
                     final displayBloc =
                         BlocProvider.of<TodoDisplayBloc>(context);
-                    return ListView.builder(
-                      physics: const BouncingScrollPhysics(
-                        parent: AlwaysScrollableScrollPhysics(),
-                      ),
-                      itemCount: state.allTodos.length,
-                      itemBuilder: (context, index) {
-                        final todo = state.allTodos[index];
-                        return Dismissible(
-                          key: Key(todo.id!),
-                          direction: DismissDirection.horizontal,
-                          onDismissed: (direction) {
-                            if (direction == DismissDirection.startToEnd) {
-                              displayBloc.add(TodoDisplayDismissed(todo: todo));
-                            }
-                            if (direction == DismissDirection.endToStart) {
-                              displayBloc.add(TodoDisplayCompletionToggled(
-                                todo: todo,
-                                isCompleted: !todo.isCompleted,
-                              ));
-                            }
-                          },
-                          background: Container(
-                            color: Colors.red,
-                            alignment: Alignment.centerLeft,
-                            child: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            ),
-                          ),
-                          secondaryBackground: Container(
-                            color: Colors.green,
-                            alignment: Alignment.centerRight,
-                            child: const Icon(
-                              Icons.done,
-                              color: Colors.white,
-                            ),
-                          ),
-                          child: TodoListItem(
-                            todo: todo,
-                            onTapLeading: () => displayBloc.add(
-                              TodoDisplayCompletionToggled(
-                                todo: todo,
-                                isCompleted: !todo.isCompleted,
+                    if (state.status == TodoDisplayStatus.loading) {
+                      return const Center(child: CupertinoActivityIndicator());
+                    } else if (state.status == TodoDisplayStatus.failure ||
+                        state.allTodos.isEmpty) {
+                      return const Center(
+                        child: Text("There are no To-Do's right now.", style: TextStyle(
+                          color: CupertinoColors.systemGrey, fontSize: 15
+                        ),),
+                      );
+                    } else {
+                      return ListView.builder(
+                        physics: const BouncingScrollPhysics(
+                          parent: AlwaysScrollableScrollPhysics(),
+                        ),
+                        itemCount: state.allTodos.length,
+                        itemBuilder: (context, index) {
+                          final todo = state.allTodos[index];
+                          return Dismissible(
+                            key: Key(todo.id!),
+                            direction: DismissDirection.horizontal,
+                            onDismissed: (direction) {
+                              if (direction == DismissDirection.startToEnd) {
+                                displayBloc
+                                    .add(TodoDisplayDismissed(todo: todo));
+                              }
+                              if (direction == DismissDirection.endToStart) {
+                                displayBloc.add(TodoDisplayCompletionToggled(
+                                  todo: todo,
+                                  isCompleted: !todo.isCompleted,
+                                ));
+                              }
+                            },
+                            background: Container(
+                              color: Colors.red,
+                              alignment: Alignment.centerLeft,
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
                               ),
                             ),
-                            onTapTodo: () => Navigator.of(context).push(
-                              TodoEditPage.route(todo),
+                            secondaryBackground: Container(
+                              color: Colors.green,
+                              alignment: Alignment.centerRight,
+                              child: const Icon(
+                                Icons.done,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    );
+                            child: TodoListTile(
+                              todo: todo,
+                              onTapLeading: () => displayBloc.add(
+                                TodoDisplayCompletionToggled(
+                                  todo: todo,
+                                  isCompleted: !todo.isCompleted,
+                                ),
+                              ),
+                              onTapTodo: () => Navigator.of(context).push(
+                                TodoEditPage.route(todo),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }
                   },
                 ),
               ),
@@ -184,43 +195,6 @@ class TodoList extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class TodoListItem extends StatelessWidget {
-  final Todo todo;
-  final VoidCallback onTapLeading;
-  final VoidCallback onTapTodo;
-
-  const TodoListItem({
-    Key? key,
-    required this.todo,
-    required this.onTapLeading,
-    required this.onTapTodo,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: IconButton(
-        onPressed: onTapLeading,
-        icon: todo.isCompleted == true
-            ? const Icon(Icons.check_box, color: CupertinoColors.white)
-            : const Icon(Icons.check_box_outline_blank,
-                color: CupertinoColors.white),
-      ),
-      title: Text(
-        todo.content,
-        style: TextStyle(
-          decoration:
-              todo.isCompleted == true ? TextDecoration.lineThrough : null,
-          color: todo.isCompleted == true
-              ? CupertinoColors.systemGrey
-              : CupertinoColors.white,
-        ),
-      ),
-      onTap: onTapTodo,
     );
   }
 }

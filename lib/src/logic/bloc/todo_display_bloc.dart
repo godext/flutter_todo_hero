@@ -33,11 +33,13 @@ class TodoDisplayBloc extends Bloc<TodoDisplayEvent, TodoDisplayState> {
 
     log("after setting filter: ${state.filter.toString()}");
 
-    await emit.forEach<List<Todo>>(_repository.readTodoByFilter(event.filter),
+    await emit.forEach<List<Todo>>(
+        _repository.readTodoByFilter(
+          event.filter,
+        ),
         onData: (todos) => state.copyWith(
               status: () => TodoDisplayStatus.success,
               todos: () => todos,
-              filter: () => event.filter,
             ),
         onError: (_, __) => state.copyWith(
               status: () => TodoDisplayStatus.failure,
@@ -58,7 +60,7 @@ class TodoDisplayBloc extends Bloc<TodoDisplayEvent, TodoDisplayState> {
         onData: (todos) => state.copyWith(
               status: () => TodoDisplayStatus.success,
               todos: () => todos,
-              filter: () => state.filter,
+              //filter: () => state.currentFilter,
             ),
         onError: (_, __) =>
             state.copyWith(status: () => TodoDisplayStatus.failure));
@@ -69,11 +71,16 @@ class TodoDisplayBloc extends Bloc<TodoDisplayEvent, TodoDisplayState> {
     Emitter<TodoDisplayState> emit,
   ) async {
     try {
-      final newTodo = event.todo.copyWith(isCompleted: event.isCompleted);
+      final newTodo = event.todo.copyWith(
+        isCompleted: event.isCompleted,
+      );
       await _repository.updateTodo(newTodo);
+      emit(state.copyWith(
+          // filter: () => state.currentFilter,
+          ));
       log("Nach dem completion-toggled: ${state.filter.toString()}");
     } catch (e) {
-      print('Ist ein Fehler aufgetreten :)');
+      log("Error onCompletionToggled: $e");
     }
   }
 
@@ -83,9 +90,12 @@ class TodoDisplayBloc extends Bloc<TodoDisplayEvent, TodoDisplayState> {
   ) async {
     try {
       await _repository.deleteTodo(event.todo.id!);
+      emit(state.copyWith(
+          //  filter: () => state.currentFilter,
+          ));
       log(state.filter.toString());
     } catch (e) {
-      print('Fehler beim dismissen der To-Do von der Front-View');
+      log("Error onTodoDismissed: $e");
     }
   }
 }

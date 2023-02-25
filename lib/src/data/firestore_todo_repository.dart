@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:todo_hero/src/Entities/entities.dart';
@@ -72,12 +74,16 @@ class FirestoreTodoRepository {
   Stream<List<Todo>> readTodoByFilter(TodoDisplayFilter filter) {
     switch (filter) {
       case TodoDisplayFilter.all:
+      log('Ich filtere jetzt nach All');
         return _readAllTodoByUser();
       case TodoDisplayFilter.active:
+      log('Ich filtere jetzt nach Active');
         return _readTodoFilter(false);
       case TodoDisplayFilter.done:
+        log('Ich filtere jetzt nach Done');
         return _readTodoFilter(true);
       default:
+      log('Ich filtere jetzt nach All -> Default');
         return _readAllTodoByUser();
     }
   }

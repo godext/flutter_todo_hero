@@ -6,7 +6,6 @@ class TodoListTile extends StatelessWidget {
   const TodoListTile({
     required this.todo,
     super.key,
-    required this.leading,
     this.onTapTodo,
     this.onTapLeading,
   });
@@ -14,11 +13,9 @@ class TodoListTile extends StatelessWidget {
   final Todo todo;
   final VoidCallback? onTapTodo;
   final VoidCallback? onTapLeading;
-  final Widget leading;
 
   @override
   Widget build(BuildContext context) {
-    print('build-method TodoListTile');
     return ListTile(
       onTap: onTapTodo,
       title: Text(
@@ -35,9 +32,12 @@ class TodoListTile extends StatelessWidget {
           color: Colors.grey[600],
         ),
       ),
-      leading: IconButton(
-        icon: leading,
+       leading: IconButton(
         onPressed: onTapLeading,
+        icon: todo.isCompleted == true
+            ? const Icon(Icons.check_box, color: CupertinoColors.white)
+            : const Icon(Icons.check_box_outline_blank,
+                color: CupertinoColors.white),
       ),
     );
   }
