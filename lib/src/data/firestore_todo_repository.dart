@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:todo_hero/src/Entities/entities.dart';
+import 'package:todo_hero/src/logic/bloc/todo_display_bloc.dart';
 import 'package:todo_hero/src/models/model.dart';
 import 'package:todo_hero/src/util/constants/firestore_constants/firestore_constants.dart';
 import 'package:todo_hero/src/util/exceptions/custom_exceptions.dart';
@@ -47,15 +50,7 @@ class FirestoreTodoRepository {
     }
   }
 
-  Stream<List<Todo>> readAllTodo() {
-    return db.snapshots().map((snapshot) {
-      return snapshot.docs
-          .map((doc) => Todo.fromEntity(TodoEntity.fromSnapshot(doc)))
-          .toList();
-    });
-  }
-
-  Stream<List<Todo>> readTodoByUser() {
+  Stream<List<Todo>> _readAllTodoByUser() {
     final currentUserID = _authenticationRepository.currentUser.userID;
     return db
         .where(ownerUserIdFieldName, isEqualTo: currentUserID)
@@ -63,6 +58,34 @@ class FirestoreTodoRepository {
         .map((snapshot) => snapshot.docs
             .map((doc) => Todo.fromEntity(TodoEntity.fromSnapshot(doc)))
             .toList());
+  }
+
+  Stream<List<Todo>> _readTodoFilter(bool isCompleted) {
+    final currentUserID = _authenticationRepository.currentUser.userID;
+    return db
+        .where(ownerUserIdFieldName, isEqualTo: currentUserID)
+        .where(todoCompleted, isEqualTo: isCompleted)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Todo.fromEntity(TodoEntity.fromSnapshot(doc)))
+            .toList());
+  }
+
+  Stream<List<Todo>> readTodoByFilter(TodoDisplayFilter filter) {
+    switch (filter) {
+      case TodoDisplayFilter.all:
+      log('Ich filtere jetzt nach All');
+        return _readAllTodoByUser();
+      case TodoDisplayFilter.active:
+      log('Ich filtere jetzt nach Active');
+        return _readTodoFilter(false);
+      case TodoDisplayFilter.done:
+        log('Ich filtere jetzt nach Done');
+        return _readTodoFilter(true);
+      default:
+      log('Ich filtere jetzt nach All -> Default');
+        return _readAllTodoByUser();
+    }
   }
 
 // update todo's

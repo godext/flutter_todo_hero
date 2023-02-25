@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_hero/src/data/repositories.dart';
 import 'package:todo_hero/src/logic/bloc/app_bloc.dart';
 import 'package:todo_hero/src/logic/bloc/todo_display_bloc.dart';
+import 'package:todo_hero/src/models/model.dart';
 import 'package:todo_hero/src/screens/ToDo/todo_list_tile.dart';
 import 'package:todo_hero/src/screens/screens.dart';
-import 'package:todo_hero/src/util/Icons/flutter_icons.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -19,7 +19,18 @@ class HomePage extends StatelessWidget {
 }
 
 class TodoList extends StatelessWidget {
-  const TodoList({super.key});
+  const TodoList({super.key, this.errorMessage});
+
+  // Define a private variable to hold the error message
+  final String? errorMessage;
+
+  // Define a getter method called 'error' to retrieve the error message
+  String? get error => errorMessage;
+
+  // Define a method to set the error message
+  void setError(String errorMessage) {
+    errorMessage = errorMessage;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,22 +51,40 @@ class TodoList extends StatelessWidget {
                 color: CupertinoColors.white,
               )),
           backgroundColor: CupertinoColors.systemBlue,
-          leading: IconButton(
-            icon: const Icon(CupertinoIcons.slider_horizontal_3),
-            color: Colors.white,
-            onPressed: () => CupertinoActionSheet(
-              title: const Text("Filter To-Do's"),
-              actions: [
-                CupertinoActionSheetAction(
-                  onPressed: ((() {})),
-                  child: const Text('Active'),
+          leading: BlocBuilder<TodoDisplayBloc, TodoDisplayState>(
+            builder: (context, state) {
+              TodoDisplayBloc bloc = context.read<TodoDisplayBloc>();
+              final filters = [
+                {'value': TodoDisplayFilter.all, 'text': 'All'},
+                {'value': TodoDisplayFilter.active, 'text': 'Active'},
+                {'value': TodoDisplayFilter.done, 'text': 'Done'},
+              ];
+              return PopupMenuButton<String>(
+                icon: const Icon(
+                  CupertinoIcons.slider_horizontal_3,
+                  color: Colors.white,
                 ),
-                CupertinoActionSheetAction(
-                  onPressed: ((() {})),
-                  child: const Text('Done'),
-                ),
-              ],
-            ),
+                initialValue: bloc.state.filter.toString(),
+                onSelected: (String choice) {},
+                itemBuilder: (BuildContext context) {
+                  return filters
+                      .map((filter) => PopupMenuItem<String>(
+                            value: filter['text'] as String?,
+                            child: Text(filter['text'] as String,
+                                style: TextStyle(
+                                  color: bloc.state.filter == filter['value']
+                                      ? CupertinoColors.activeBlue
+                                      : CupertinoColors.black,
+                                )),
+                            onTap: () => bloc.add(
+                              TodoDisplayFilterSet(
+                                  filter: filter['value'] as TodoDisplayFilter),
+                            ),
+                          ))
+                      .toList();
+                },
+              );
+            },
           ),
           trailing: IconButton(
             color: Colors.white,
@@ -72,15 +101,26 @@ class TodoList extends StatelessWidget {
               Expanded(
                 child: BlocBuilder<TodoDisplayBloc, TodoDisplayState>(
                   builder: (context, state) {
-                    TodoDisplayBloc displayBloc =
+                    final displayBloc =
                         BlocProvider.of<TodoDisplayBloc>(context);
-                    return ListView(
-                      //physics: const BouncingScrollPhysics(),
-                      physics: const BouncingScrollPhysics(
-                          parent: AlwaysScrollableScrollPhysics()),
-                      children: [
-                        for (final todo in state.allTodos)
-                          Dismissible(
+                    if (state.status == TodoDisplayStatus.loading) {
+                      return const Center(child: CupertinoActivityIndicator());
+                    } else if (state.status == TodoDisplayStatus.failure ||
+                        state.allTodos.isEmpty) {
+                      return const Center(
+                        child: Text("There are no To-Do's right now.", style: TextStyle(
+                          color: CupertinoColors.systemGrey, fontSize: 15
+                        ),),
+                      );
+                    } else {
+                      return ListView.builder(
+                        physics: const BouncingScrollPhysics(
+                          parent: AlwaysScrollableScrollPhysics(),
+                        ),
+                        itemCount: state.allTodos.length,
+                        itemBuilder: (context, index) {
+                          final todo = state.allTodos[index];
+                          return Dismissible(
                             key: Key(todo.id!),
                             direction: DismissDirection.horizontal,
                             onDismissed: (direction) {
@@ -88,7 +128,6 @@ class TodoList extends StatelessWidget {
                                 displayBloc
                                     .add(TodoDisplayDismissed(todo: todo));
                               }
-
                               if (direction == DismissDirection.endToStart) {
                                 displayBloc.add(TodoDisplayCompletionToggled(
                                   todo: todo,
@@ -114,9 +153,6 @@ class TodoList extends StatelessWidget {
                             ),
                             child: TodoListTile(
                               todo: todo,
-                              leading: todo.isCompleted == true
-                                  ? iconTodoFinished
-                                  : iconTodoUnfinished,
                               onTapLeading: () => displayBloc.add(
                                 TodoDisplayCompletionToggled(
                                   todo: todo,
@@ -127,9 +163,10 @@ class TodoList extends StatelessWidget {
                                 TodoEditPage.route(todo),
                               ),
                             ),
-                          ),
-                      ],
-                    );
+                          );
+                        },
+                      );
+                    }
                   },
                 ),
               ),
@@ -146,10 +183,12 @@ class TodoList extends StatelessWidget {
                   },
                   color: CupertinoColors.systemBlue.withOpacity(0.7),
                   borderRadius: BorderRadius.circular(20),
-                  child: const Text('Add Todo',
-                      style: TextStyle(
-                        color: CupertinoColors.white,
-                      )),
+                  child: const Text(
+                    'Add Todo',
+                    style: TextStyle(
+                      color: CupertinoColors.white,
+                    ),
+                  ),
                 ),
               ),
             ],
