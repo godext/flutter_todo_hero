@@ -9,6 +9,7 @@ import 'package:todo_hero/src/logic/bloc/todo_edit_bloc.dart';
 import 'package:todo_hero/src/models/model.dart';
 import 'package:todo_hero/src/screens/screens.dart';
 import 'package:todo_hero/src/util/widgets/cupertino_scaffold.dart';
+import 'package:todo_hero/src/util/widgets/widgets.dart';
 
 @immutable
 class TodoEditPage extends StatelessWidget {
@@ -96,10 +97,7 @@ class _ContentInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int selectedSegment = 1;
-    const segmentCount = 5;
     final TodoEditBloc todoEditBloc = context.read<TodoEditBloc>();
-    log('Wert von Time-Complexity ist: ${todoEditBloc.state.timeComplexity}');
 
     return BlocBuilder<TodoEditBloc, TodoEditState>(
       buildWhen: (previous, current) => previous != current,
@@ -152,37 +150,10 @@ class _ContentInput extends StatelessWidget {
                   // TimeComplexity
                   BlocBuilder<TodoEditBloc, TodoEditState>(
                     builder: (context, state) {
-                      return CupertinoSlidingSegmentedControl<int>(
-                        backgroundColor: CupertinoColors.systemGrey2,
-                        groupValue: state.timeComplexity == 0
-                            ? 1
-                            : state.timeComplexity,
-                        thumbColor: CupertinoColors.systemBlue,
-                        onValueChanged: (int? value) {
-                          if (value != null) {
-                            //selectedSegment = value;
-                            todoEditBloc.add(
-                              TodoTimeComplexityChanged(value),
-                            );
-                          }
-                        },
-                        children: Map.fromEntries(
-                          List.generate(
-                            segmentCount,
-                            (index) => MapEntry(
-                              index + 1,
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 25),
-                                child: Text(
-                                  '${index + 1}',
-                                  style: const TextStyle(
-                                    color: CupertinoColors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                      return CustomCupertinoSegmentedControl(
+                        todoEditBloc: todoEditBloc,
+                        onValueChanged: (value) => todoEditBloc.add(
+                          TodoTimeComplexityChanged(value),
                         ),
                       );
                     },
@@ -210,7 +181,7 @@ class _ContentInput extends StatelessWidget {
                         },
                         children: Map.fromEntries(
                           List.generate(
-                            segmentCount,
+                            5,
                             (index) => MapEntry(
                               index + 1,
                               Padding(
