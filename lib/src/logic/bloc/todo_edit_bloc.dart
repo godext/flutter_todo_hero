@@ -113,10 +113,10 @@ class TodoEditBloc extends Bloc<TodoEditEvent, TodoEditState> {
     emit(state.copyWith(status: TodoStatus.loading));
     final todo = Todo(
             content: '',
-            timeComplexity: 0,
-            importancy: 0,
-            difficulty: 0,
-            beneficial: 0,
+            timeComplexity: 1,
+            importancy: 1,
+            difficulty: 1,
+            beneficial: 1,
             userId: _authenticationRepository.currentUser.id,
             isCompleted: false,
             dateDue: DateTime.now().toString(),

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +6,6 @@ import 'package:todo_hero/src/data/firestore_todo_repository.dart';
 import 'package:todo_hero/src/logic/bloc/todo_edit_bloc.dart';
 import 'package:todo_hero/src/models/model.dart';
 import 'package:todo_hero/src/screens/screens.dart';
-import 'package:todo_hero/src/util/widgets/cupertino_scaffold.dart';
 import 'package:todo_hero/src/util/widgets/widgets.dart';
 
 @immutable
@@ -143,65 +140,68 @@ class _ContentInput extends StatelessWidget {
                       ),
                     ],
                   ),
+                  // Difficulty
                   const SizedBox(height: 25),
                   const Text('Difficulty',
                       style: TextStyle(color: CupertinoColors.white)),
                   const SizedBox(height: 10),
-                  // TimeComplexity
-                  BlocBuilder<TodoEditBloc, TodoEditState>(
-                    builder: (context, state) {
-                      return CustomCupertinoSegmentedControl(
-                        todoEditBloc: todoEditBloc,
-                        onValueChanged: (value) => todoEditBloc.add(
-                          TodoTimeComplexityChanged(value),
-                        ),
-                      );
-                    },
+                  // Difficulty
+                  CustomCupertinoSegmentedControl(
+                    todoEditBloc: todoEditBloc,
+                    groupValue: todoEditBloc.state.difficulty == 0
+                        ? 1
+                        : todoEditBloc.state.difficulty,
+                    onValueChanged: (value) => todoEditBloc.add(
+                      TodoDifficultyChanged(value),
+                    ),
                   ),
+
                   const SizedBox(height: 25),
-                  const Text('Time-complexity',
+                  const Text('Time complexity',
                       style: TextStyle(color: CupertinoColors.white)),
                   const SizedBox(height: 10),
                   // TimeComplexity
-                  BlocBuilder<TodoEditBloc, TodoEditState>(
-                    builder: (context, state) {
-                      return CupertinoSlidingSegmentedControl<int>(
-                        backgroundColor: CupertinoColors.systemGrey2,
-                        groupValue: state.timeComplexity == 0
-                            ? 1
-                            : state.timeComplexity,
-                        thumbColor: CupertinoColors.systemBlue,
-                        onValueChanged: (int? value) {
-                          if (value != null) {
-                            //selectedSegment = value;
-                            todoEditBloc.add(
-                              TodoTimeComplexityChanged(value),
-                            );
-                          }
-                        },
-                        children: Map.fromEntries(
-                          List.generate(
-                            5,
-                            (index) => MapEntry(
-                              index + 1,
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 25),
-                                child: Text(
-                                  '${index + 1}',
-                                  style: const TextStyle(
-                                    color: CupertinoColors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
+                  CustomCupertinoSegmentedControl(
+                    todoEditBloc: todoEditBloc,
+                    groupValue: todoEditBloc.state.timeComplexity == 0
+                        ? 1
+                        : todoEditBloc.state.timeComplexity,
+                    onValueChanged: (value) => todoEditBloc.add(
+                      TodoTimeComplexityChanged(value),
+                    ),
                   ),
-                  const SizedBox(height: 35),
 
+                  const SizedBox(height: 25),
+                  const Text('Added Value',
+                      style: TextStyle(color: CupertinoColors.white)),
+                  const SizedBox(height: 10),
+                  // Beneficial
+                  CustomCupertinoSegmentedControl(
+                    todoEditBloc: todoEditBloc,
+                    groupValue: todoEditBloc.state.beneficial == 0
+                        ? 1
+                        : todoEditBloc.state.beneficial,
+                    onValueChanged: (value) => todoEditBloc.add(
+                      TodoBeneficialChanged(value),
+                    ),
+                  ),
+
+                  const SizedBox(height: 25),
+                  const Text('Importancy',
+                      style: TextStyle(color: CupertinoColors.white)),
+                  const SizedBox(height: 10),
+                  // Beneficial
+                  CustomCupertinoSegmentedControl(
+                    todoEditBloc: todoEditBloc,
+                    groupValue: todoEditBloc.state.importancy == 0
+                        ? 1
+                        : todoEditBloc.state.importancy,
+                    onValueChanged: (value) => todoEditBloc.add(
+                      TodoImportancyChanged(value),
+                    ),
+                  ),
+
+                  const SizedBox(height: 35),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
                     child: Column(
@@ -220,10 +220,11 @@ class _ContentInput extends StatelessWidget {
                           // If it's not a new todo, this button shall be GONE
                           visible: !state.isNewTodo,
                           child: CupertinoButton(
-                              child: const Text('Delete'),
-                              onPressed: () {
-                                return _showAlertDialog(context);
-                              }),
+                            child: const Text('Delete'),
+                            onPressed: () {
+                              return _showAlertDialog(context);
+                            },
+                          ),
                         ),
                       ],
                     ),

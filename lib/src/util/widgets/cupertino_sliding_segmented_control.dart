@@ -7,18 +7,18 @@ class CustomCupertinoSegmentedControl extends StatelessWidget {
     Key? key,
     required this.todoEditBloc,
     required this.onValueChanged,
+    required this.groupValue,
   }) : super(key: key);
 
   final Function(int value) onValueChanged;
   final TodoEditBloc todoEditBloc;
+  final int groupValue;
 
   @override
   Widget build(BuildContext context) {
     return CupertinoSlidingSegmentedControl<int>(
       backgroundColor: CupertinoColors.systemGrey2,
-      groupValue: todoEditBloc.state.timeComplexity == 0
-          ? 1
-          : todoEditBloc.state.timeComplexity,
+      groupValue: groupValue,
       thumbColor: CupertinoColors.systemBlue,
       onValueChanged: (int? value) {
         if (value != null) {
